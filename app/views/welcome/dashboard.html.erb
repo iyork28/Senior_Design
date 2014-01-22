@@ -1,3 +1,2 @@
-<h1><%= current_user.full_name %><br />
- Welcome to your dashboard!</h1>
+<h1>Dashboard | <%= current_user.full_name %></h1>
 <p><%= link_to 'sign out', destroy_user_session_path, :method => :delete %></p>
