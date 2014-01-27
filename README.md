@@ -14,6 +14,6 @@ If you want to pull this code, follow this procedure after pulling:
 	bundle # this does bundle install to get an update list of gems. If the Gemfile wasn't changed, this isn't necessary
 	rake db:migrate # runs any DB migrations; again, not necessary if there aren't any
 	
-I'll post the link to the Heroku server once it's set up to
+Here's the link to the Heroku server: [*http://morning-island-4911.herokuapp.com*](http://morning-island-4911.herokuapp.com). Not sure how dynamic this will be, so if it stops working... Oops.
 
-- Ian
+\- Ian
