@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   
-  has_and_belongs_to_many :organizations
+  has_many :organizations, through: :memberships
+  has_many :memberships
   
   def full_name
      [first_name, last_name].join(' ')
