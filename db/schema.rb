@@ -11,14 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140127154733) do
-
-  create_table "admins_organizations", force: true do |t|
-    t.integer "user_id"
-    t.integer "organization_id"
-  end
-
-  add_index "admins_organizations", ["user_id", "organization_id"], name: "index_admins_organizations_on_user_id_and_organization_id"
+ActiveRecord::Schema.define(version: 20140203193621) do
 
   create_table "organizations", force: true do |t|
     t.string   "name"
@@ -29,6 +22,7 @@ ActiveRecord::Schema.define(version: 20140127154733) do
   create_table "organizations_users", force: true do |t|
     t.integer "user_id"
     t.integer "organization_id"
+    t.boolean "admin",           default: false
   end
 
   add_index "organizations_users", ["user_id", "organization_id"], name: "index_organizations_users_on_user_id_and_organization_id"

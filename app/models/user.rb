@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   
   has_and_belongs_to_many :organizations
-  has_and_belongs_to_many :managed_organizations, class_name: "Organization", join_table: "admins_organizations"
   
   def full_name
      [first_name, last_name].join(' ')
