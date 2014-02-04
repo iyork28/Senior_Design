@@ -1,2 +1,12 @@
 <h1>Dashboard | <%= current_user.full_name %></h1>
-<p><%= link_to 'sign out', destroy_user_session_path, :method => :delete %></p>
+<hr />
+<% if @organizations.blank? %>
+    <p>You are not a member of any groups</p>
+    <hr />
+<% else %>
+    <% @organizations.each do |o| %>
+        <h4><%= o.name %> (<%= o.membership_type(@current_user) %>)</h4>
+        <hr />
+    <% end %>
+<% end %>
+<%= link_to 'Create new organization', new_organization_path %>

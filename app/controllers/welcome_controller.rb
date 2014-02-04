@@ -6,6 +6,7 @@ class WelcomeController < ApplicationController
   end
 
   def dashboard
+    @organizations = current_user.organizations
   end
 
 end
