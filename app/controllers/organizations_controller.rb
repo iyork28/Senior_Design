@@ -7,6 +7,7 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(organization_params)
+    @organization.set_password(params[:organization][:password]);
     @organization.save
 
     @membership = Membership.new(organization: @organization, user: current_user, admin: true)

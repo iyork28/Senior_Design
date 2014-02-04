@@ -5,6 +5,15 @@ class Organization < ActiveRecord::Base
            :through => :memberships, :source => :user
   has_many :memberships
 
+  def set_password(clear_text)
+    # not super secure due to no salt value but oh well
+    self.password = Digest::SHA1.hexdigest(clear_text)
+  end
+
+  def is_password?(clear_text)
+    return self.password == Digest::SHA1.hexdigest(clear_text)
+  end
+
   def membership_type(user)
     @membership = Membership.where(:user => user, :organization => self)
     if @membership.exists? then

@@ -11,12 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140203193621) do
+ActiveRecord::Schema.define(version: 20140204140326) do
 
   create_table "organizations", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "password",   default: "9d4e1e23bd5b727046a9e3b4b7db57bd8d6ee684"
   end
 
   create_table "organizations_users", force: true do |t|
