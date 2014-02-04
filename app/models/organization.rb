@@ -16,9 +16,13 @@ class Organization < ActiveRecord::Base
 
   def membership_type(user)
     @membership = Membership.where(:user => user, :organization => self)
-    if @membership.exists? then
+    if @membership.exists?
       @membership = @membership[0]
-      return 'Admin' if @membership.admin else 'Member'
+      if @membership.admin
+        return 'Admin'
+      else
+        return 'Member'
+      end
     end
     return 'Not Member'
   end
