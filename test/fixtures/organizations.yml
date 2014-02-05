@@ -1,7 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+##########################################
+# 40bd001563085fc35165329ea1ff5c5ecbdbbeef
+# is the hash for '123'
+##########################################
 
-two:
-  name: MyString
+senior_design:
+  name: Senior design
+  password: 40bd001563085fc35165329ea1ff5c5ecbdbbeef
+
+square:
+  name: Square
+  password: 40bd001563085fc35165329ea1ff5c5ecbdbbeef
+
+no_members:
+  id: 666
+  name: No members
+  password: 40bd001563085fc35165329ea1ff5c5ecbdbbeef

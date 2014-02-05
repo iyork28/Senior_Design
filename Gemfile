@@ -54,3 +54,5 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
+
+gem 'capybara'
