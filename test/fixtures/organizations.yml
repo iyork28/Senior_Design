@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+senior_design:
+  name: Senior design
 
-two:
-  name: MyString
+square:
+  name: Square

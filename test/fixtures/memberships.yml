@@ -1,0 +1,9 @@
+one:
+  user: clay
+  organization: senior_design
+  admin: true
+
+two:
+  user: clay
+  organization: square
+  admin: false
