@@ -1,7 +1,7 @@
 SeniorDesign::Application.routes.draw do
   match "organizations/join" => "organizations#join", :via => [:get, :post]
+  match "organizations/add_admins/:id" => "organizations#add_admins", :via => [:get, :post]
   resources :organizations
-  
   root 'welcome#index'
   
   devise_for :users

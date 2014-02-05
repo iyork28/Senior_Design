@@ -33,6 +33,32 @@ class OrganizationsController < ApplicationController
     @organizations = Organization.order(:name)
   end
 
+  def add_admins
+    @organization = Organization.find(params[:id])
+    @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+    if not @membership.exists?
+      redirect_to controller: 'welcome', action: 'dashboard'
+    end
+    @userids = Membership.where(organization: @organization).where(admin: false).pluck(:user_id)
+    @users = User.where(id: @userids)
+    if request.post?
+      @users.each do |u|
+          puts u.full_name
+          @param = params[u.id.to_s]
+          if @param
+            puts @param.to_s
+            membershiptochange = Membership.find_by(user: u)
+            membershiptochange.admin = true
+            membershiptochange.save
+            puts membershiptochange.admin.to_s
+          end
+      end
+      redirect_to controller: 'welcome', action: 'dashboard'
+    end
+    
+    
+  end
+
   private
     def organization_params
       params.require(:organization).permit(:name)

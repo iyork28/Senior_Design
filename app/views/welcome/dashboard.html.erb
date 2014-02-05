@@ -6,6 +6,9 @@
 <% else %>
     <% @organizations.each do |o| %>
         <h4><%= o.name %> (<%= o.membership_type(@current_user) %>)</h4>
+        <% if o.is_admin(@current_user) %>
+        	<%= link_to 'Add other admins', {:controller => 'organizations', :action => 'add_admins', :id => o.id} %>
+        <% end %>
         <hr />
     <% end %>
 <% end %>
