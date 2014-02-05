@@ -9,3 +9,4 @@ clay:
   first_name: clay
   last_name: goddard
   email: clay@clay.com
+  encrypted_password: 123123123  # not actually encrypted (obviously)
