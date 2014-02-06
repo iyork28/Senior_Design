@@ -47,7 +47,7 @@ class OrganizationsController < ApplicationController
           @param = params[u.id.to_s]
           if @param
             puts @param.to_s
-            membershiptochange = Membership.find_by(user: u)
+            membershiptochange = Membership.find_by(user: u, organization: @organization)
             membershiptochange.admin = true
             membershiptochange.save
             puts membershiptochange.admin.to_s
@@ -69,7 +69,7 @@ class OrganizationsController < ApplicationController
       @users.each do |u|
           @param = params[u.id.to_s]
           if @param
-            membershiptochange = Membership.find_by(user: u)
+            membershiptochange = Membership.find_by(user: u, organization: @organization)
             membershiptochange.admin = false
             membershiptochange.save
           end
