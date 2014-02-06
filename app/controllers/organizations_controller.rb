@@ -32,6 +32,10 @@ class OrganizationsController < ApplicationController
     end
     @organizations = Organization.order(:name)
   end
+  
+  def list_users
+    
+  end
 
   def add_admins
     @organization = Organization.find(params[:id])

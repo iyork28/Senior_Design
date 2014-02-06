@@ -9,6 +9,7 @@
         <% if o.is_admin(@current_user) %>
         	<%= link_to 'Add other admins', {:controller => 'organizations', :action => 'add_admins', :id => o.id} %> <br/>
         	<%= link_to 'Remove admins', {:controller => 'organizations', :action => 'remove_admins', :id => o.id} %>
+					<%= link_to('Create New Group', new_group_path(org_id: o.id) )%>
         <% end %>
         <hr />
     <% end %>
