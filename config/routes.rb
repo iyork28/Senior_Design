@@ -1,6 +1,9 @@
 SeniorDesign::Application.routes.draw do
+  get "groups/new"
+  get "groups/create"
   match "organizations/join" => "organizations#join", :via => [:get, :post]
   resources :organizations
+  resources :groups
   
   root 'welcome#index'
   

@@ -32,6 +32,10 @@ class OrganizationsController < ApplicationController
     end
     @organizations = Organization.order(:name)
   end
+  
+  def list_users
+    
+  end
 
   private
     def organization_params
