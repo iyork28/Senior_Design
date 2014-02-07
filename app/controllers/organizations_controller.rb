@@ -43,17 +43,17 @@ class OrganizationsController < ApplicationController
       @adminstoremove = params["adminstoremove"]
       if @adminstoremove
         @adminstoremove.each do |a|
-            membershiptochange = Membership.find_by(user_id: a, organization_id: @organization )
-            membershiptochange.admin = false
-            membershiptochange.save
+          membershiptochange = Membership.find_by(user_id: a, organization_id: @organization )
+          membershiptochange.admin = false
+          membershiptochange.save
         end
       end
       @newadmins = params["newadmins"]
       if @newadmins
         @newadmins.each do |u|
-            membershiptochange = Membership.find_by(user_id: u, organization_id: @organization)
-            membershiptochange.admin = true
-            membershiptochange.save
+          membershiptochange = Membership.find_by(user_id: u, organization_id: @organization)
+          membershiptochange.admin = true
+          membershiptochange.save
         end
       end
     end
