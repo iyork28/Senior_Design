@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_many :managed_organizations, -> { where('organizations_users.admin = ?', true) },
            :through => :memberships, :source => :organization
   has_many :memberships
+  has_many :charges, as: :chargeable
   
   def full_name
     [first_name, last_name].join(' ')

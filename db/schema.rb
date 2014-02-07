@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140204140326) do
+ActiveRecord::Schema.define(version: 20140207190026) do
+
+  create_table "charges", force: true do |t|
+    t.string   "description"
+    t.float    "amount"
+    t.integer  "organization_id"
+    t.integer  "chargeable_id"
+    t.string   "chargeable_type"
+    t.date     "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "charges", ["organization_id"], name: "index_charges_on_organization_id"
 
   create_table "organizations", force: true do |t|
     t.string   "name"
