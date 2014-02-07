@@ -10,6 +10,16 @@ class User < ActiveRecord::Base
   has_many :memberships
   
   def full_name
-     [first_name, last_name].join(' ')
+    [first_name, last_name].join(' ')
+  end
+
+  def get_total_balance
+    # will fill in once charges have been added
+    return 0
+  end
+
+  def get_balance_for_organization (org)
+    # will fill in once charges have been added
+    return 0
   end
 end

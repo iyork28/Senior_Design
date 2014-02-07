@@ -1,4 +1,5 @@
 <h1>Dashboard | <%= current_user.full_name %></h1>
+<h2>Total Balance: <%= number_to_currency @current_user.get_total_balance %></h2>
 <hr />
 <% if @organizations.blank? %>
     <p>You are not a member of any groups</p>
@@ -6,6 +7,7 @@
 <% else %>
     <% @organizations.each do |o| %>
         <h4><%= o.name %> (<%= o.membership_type(@current_user) %>)</h4>
+        <p>Balance: <%= number_to_currency @current_user.get_balance_for_organization o %></p>
         <% if o.is_admin(@current_user) %>
         	<%= link_to 'Add other admins', {:controller => 'organizations', :action => 'add_admins', :id => o.id} %> <br/>
         	<%= link_to 'Remove admins', {:controller => 'organizations', :action => 'remove_admins', :id => o.id} %>
