@@ -15,12 +15,18 @@ class User < ActiveRecord::Base
   end
 
   def get_total_balance
-    # will fill in once charges have been added
-    return 0
+    # fill in with payments later
+    @organization_charges = 0.0
+    self.organizations.each do |o|
+      @organization_charges += self.get_balance_for_organization(o)
+    end
+    return @organization_charges
   end
 
   def get_balance_for_organization (org)
-    # will fill in once charges have been added
-    return 0
+    # fill in with amounts of payments
+    @org_charges = org.charges.sum(&:amount)
+    @personal_org_charges = self.charges.where(organization: org).sum(&:amount)
+    return @org_charges + @personal_org_charges
   end
 end

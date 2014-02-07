@@ -63,6 +63,21 @@ class OrganizationsController < ApplicationController
     @users = User.where(id: @userids)
   end
 
+  def create_charge
+    @organization = Organization.find(params[:id])
+    @users = @organization.users.order(:last_name)
+    if request.post?
+      @user = User.find(params[:user])
+      @amount = params[:amount]
+      @description = params[:description]
+      @due_date = params[:due_date]
+
+      @charge = @user.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
+      @charge.save
+      redirect_to dashboard_url
+    end
+  end
+
   private
     def organization_params
       params.require(:organization).permit(:name)
