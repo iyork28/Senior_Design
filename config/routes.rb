@@ -1,7 +1,6 @@
 SeniorDesign::Application.routes.draw do
   match "organizations/join" => "organizations#join", :via => [:get, :post]
-  match "organizations/add_admins/:id" => "organizations#add_admins", :via => [:get, :post]
-  match "organizations/remove_admins/:id" => "organizations#remove_admins", :via => [:get, :post]
+  match "organizations/edit_admins/:id" => "organizations#edit_admins", :via => [:get, :post]
   resources :organizations
   root 'welcome#index'
   
