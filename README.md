@@ -13,6 +13,7 @@ If you want to pull this code, follow this procedure after pulling:
 	git pull # in case you hadn't pulled yet :)
 	bundle # this does bundle install to get an update list of gems. If the Gemfile wasn't changed, this isn't necessary
 	rake db:migrate # runs any DB migrations; again, not necessary if there aren't any
+	rails server # runs the server, navigate to localhost:3000 on your browser
 
 To run the tests:
 
