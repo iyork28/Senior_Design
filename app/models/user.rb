@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
            :through => :memberships, :source => :organization
   has_many :memberships
   has_many :group_memberships
+  has_many :groups, through: :group_memberships
   
   def full_name
      [first_name, last_name].join(' ')

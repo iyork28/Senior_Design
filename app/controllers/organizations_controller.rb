@@ -34,7 +34,7 @@ class OrganizationsController < ApplicationController
   end
   
   def list_users
-    
+    @users = Organization.find(params[:id]).users
   end
 
   def add_admins

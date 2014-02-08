@@ -1,11 +1,12 @@
 SeniorDesign::Application.routes.draw do
-  get "groups/new"
-  get "groups/create"
+  post "groups/new"
   match "organizations/join" => "organizations#join", :via => [:get, :post]
   match "organizations/add_admins/:id" => "organizations#add_admins", :via => [:get, :post]
   match "organizations/remove_admins/:id" => "organizations#remove_admins", :via => [:get, :post]
   resources :organizations
   resources :groups
+  
+  get "groups/list/:id" => "groups#list"
   
   root 'welcome#index'
   

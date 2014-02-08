@@ -4,6 +4,7 @@ class Organization < ActiveRecord::Base
   has_many :admins, -> { where('organizations_users.admin = ?', true) },
            :through => :memberships, :source => :user
   has_many :memberships
+  has_many :groups
 
   def set_password(clear_text)
     # not super secure due to no salt value but oh well
