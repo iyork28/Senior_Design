@@ -81,6 +81,26 @@ class OrganizationsController < ApplicationController
       redirect_to dashboard_url
     end
   end
+  
+  def create_group
+    @org = Organization.find(params[:id])
+    @users = @org.users
+    
+    if request.post?
+      group = Group.new
+      group.name = params[:name]
+      group.organization = params[:org_id]
+      if group.save
+        User.find(params[:added_users]).each do |user|
+          GroupMembership.create(group_id: group.id, user_id: user.id)
+        end
+        flash[:notice] = "Group Created"
+        redirect_to dashboard_path
+      else
+        flash[:notice] = "Group Creation Failed"
+      end
+    end
+  end
 
   private
     def organization_params
