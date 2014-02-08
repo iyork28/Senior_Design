@@ -89,7 +89,7 @@ class OrganizationsController < ApplicationController
     if request.post?
       group = Group.new
       group.name = params[:name]
-      group.organization = params[:org_id]
+      group.organization = Organization.find(params[:id])
       if group.save
         User.find(params[:added_users]).each do |user|
           GroupMembership.create(group_id: group.id, user_id: user.id)
@@ -100,6 +100,11 @@ class OrganizationsController < ApplicationController
         flash[:notice] = "Group Creation Failed"
       end
     end
+  end
+  
+  def view_groups
+    @org = Organization.find(params[:id])
+    @groups = @org.groups
   end
 
   private

@@ -4,4 +4,8 @@ class GroupsController < ApplicationController
   def index
     @org = Organization.find(params[:org_id])
   end
+  
+  def show
+    @group = Group.find(params[:id])
+  end
 end

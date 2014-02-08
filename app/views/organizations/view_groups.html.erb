@@ -1,0 +1,9 @@
+<h1>Groups for <%= @org.name %></h1>
+
+<ul class="list-group">
+<% @groups.each do |group| %>
+	<li class="list-group-item">
+		<%= group.name %> | <%= link_to("Show Members", {controller: 'groups', action: 'show', id: group.id}) %>
+	</li>
+<% end %>
+</ul>
