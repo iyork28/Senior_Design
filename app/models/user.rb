@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
     self.organizations.each do |o|
       @organization_charges += self.get_balance_for_organization(o)
     end
+    self.groups.each do |g|
+      @organization_charges += self.get_balance_for_group(g)
+    end
     return @organization_charges
   end
 
@@ -30,5 +33,10 @@ class User < ActiveRecord::Base
     @org_charges = org.charges.sum(&:amount)
     @personal_org_charges = self.charges.where(organization: org).sum(&:amount)
     return @org_charges + @personal_org_charges
+  end
+  
+  def get_balance_for_group (group)
+    @group_charges = group.charges.sum(&:amount)
+    return @group_charges
   end
 end
