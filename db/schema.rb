@@ -11,20 +11,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140206144329) do
 
   create_table "groups", force: true do |t|
     t.integer  "organization_id"
+=======
+ActiveRecord::Schema.define(version: 20140207190026) do
+
+  create_table "charges", force: true do |t|
+    t.string   "description"
+    t.float    "amount"
+    t.integer  "organization_id"
+    t.integer  "chargeable_id"
+    t.string   "chargeable_type"
+    t.date     "due_date"
+>>>>>>> 3c1aef81231f2e94c049bb8d77a43b593c71640d
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+<<<<<<< HEAD
   create_table "groups_users", force: true do |t|
     t.integer "group_id"
     t.integer "user_id"
   end
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id"
+=======
+  add_index "charges", ["organization_id"], name: "index_charges_on_organization_id"
+>>>>>>> 3c1aef81231f2e94c049bb8d77a43b593c71640d
 
   create_table "organizations", force: true do |t|
     t.string   "name"

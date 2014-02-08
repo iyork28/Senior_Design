@@ -1,0 +1,32 @@
+<h1>Create Charge | <%= @organization.name %></h1>
+<form method="POST" action="<%= url_for :controller => :organizations, :action => :create_charge %>">
+    <div class="form-group">
+        <label for="user">User:</label><br />
+        <select class="form-control" name="user">
+            <% @users.each do |u| %>
+                <option value="<%= u.id %>"><%= u.last_name %>, <%= u.first_name %> (<%= u.email %>)</option>
+            <% end %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="amount">Amount:</label><br />
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" class="form-control" name="amount">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label><br />
+        <textarea class="form-control" name="description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="due_date">Due date:</label><br />
+        <input type="date" class="form-control" name="due_date">
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+
+<%= params.inspect %>

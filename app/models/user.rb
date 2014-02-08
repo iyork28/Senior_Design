@@ -8,9 +8,29 @@ class User < ActiveRecord::Base
   has_many :managed_organizations, -> { where('organizations_users.admin = ?', true) },
            :through => :memberships, :source => :organization
   has_many :memberships
+<<<<<<< HEAD
   has_many :group_memberships
+=======
+  has_many :charges, as: :chargeable
+>>>>>>> 3c1aef81231f2e94c049bb8d77a43b593c71640d
   
   def full_name
-     [first_name, last_name].join(' ')
+    [first_name, last_name].join(' ')
+  end
+
+  def get_total_balance
+    # fill in with payments later
+    @organization_charges = 0.0
+    self.organizations.each do |o|
+      @organization_charges += self.get_balance_for_organization(o)
+    end
+    return @organization_charges
+  end
+
+  def get_balance_for_organization (org)
+    # fill in with amounts of payments
+    @org_charges = org.charges.sum(&:amount)
+    @personal_org_charges = self.charges.where(organization: org).sum(&:amount)
+    return @org_charges + @personal_org_charges
   end
 end
