@@ -70,15 +70,28 @@ class OrganizationsController < ApplicationController
   def create_charge
     @organization = Organization.find(params[:id])
     @users = @organization.users.order(:last_name)
+    @groups = @organization.groups.order(:name)
     if request.post?
-      @user = User.find(params[:user])
+      @chargeable = nil
+      @charge_to = params[:charge_to]
+
+      case @charge_to
+        when 'user'
+          @chargeable = User.find(params[:user])
+        when 'group'
+          @chargeable = Group.find(params[:group])
+        when 'organization'
+          @chargeable = @organization
+      end
       @amount = params[:amount]
       @description = params[:description]
       @due_date = params[:due_date]
 
-      @charge = @user.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
-      @charge.save
-      redirect_to dashboard_url
+      if @chargeable != nil then
+        @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
+        @charge.save
+        redirect_to dashboard_url
+      end
     end
   end
   
