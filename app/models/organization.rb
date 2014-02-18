@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
   has_many :memberships
   has_many :groups
   has_many :charges, as: :chargeable
+  has_many :payments
 
   def set_password(clear_text)
     # not super secure due to no salt value but oh well

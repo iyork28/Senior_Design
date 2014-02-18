@@ -119,6 +119,20 @@ class OrganizationsController < ApplicationController
     @org = Organization.find(params[:id])
     @groups = @org.groups
   end
+  
+  def create_payment
+    @organization = Organization.find(params[:id])
+    @balance = current_user.get_balance_for_organization(@organization)
+    
+    if request.post?
+      payment = Payment.new(amount: params[:amount], user_id: current_user.id, organization_id: params[:id])
+      if payment.save
+        redirect_to dashboard_path
+      else
+        flash[:notice] = "Payment Creation Failed"
+      end
+    end
+  end
 
   private
     def organization_params

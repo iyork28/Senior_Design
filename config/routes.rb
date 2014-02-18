@@ -1,14 +1,13 @@
 SeniorDesign::Application.routes.draw do
   
-  match "groups/:id/show" => "groups#show", :via => :get
-  match "organizations/:id/view_groups" => "organizations#view_groups", :via => :get
-  match "organizations/:id/create_group" => "organizations#create_group", :via => [:get, :post]
-  match "organizations/join" => "organizations#join", :via => [:get, :post]
-  match "organization/:id/edit_admins" => "organizations#edit_admins", :via => [:get, :post]
-  match "organization/:id/create_charge" => "organizations#create_charge", :via => [:get, :post]
+  match "groups/:id/show"                 => "groups#show", :via => :get
+  match "organizations/:id/view_groups"   => "organizations#view_groups", :via => :get
+  match "organizations/:id/create_group"  => "organizations#create_group", :via => [:get, :post]
+  match "organizations/join"              => "organizations#join", :via => [:get, :post]
+  match "organizations/:id/edit_admins"   => "organizations#edit_admins", :via => [:get, :post]
+  match "organizations/:id/create_charge" => "organizations#create_charge", :via => [:get, :post]
+  match "organizations/:id/make_payment"  => "organizations#create_payment", :via => [:get, :post]
   resources :organizations
-  
-  
   
   root 'welcome#index'
   

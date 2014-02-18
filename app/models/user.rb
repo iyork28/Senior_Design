@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :group_memberships
   has_many :groups, through: :group_memberships
   has_many :charges, as: :chargeable
+  has_many :payments
   
   def full_name
     [first_name, last_name].join(' ')
@@ -33,7 +34,10 @@ class User < ActiveRecord::Base
     self.groups.where(organization: org).each do |g|
       @group_charges += self.get_balance_for_group(g)
     end
-    return @org_charges + @personal_org_charges + @group_charges
+    
+    @payments = self.payments.sum(&:amount)
+    
+    return @org_charges + @personal_org_charges + @group_charges - @payments
   end
   
   def get_balance_for_group (group)
