@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140207190026) do
+ActiveRecord::Schema.define(version: 20140218054641) do
 
   create_table "charges", force: true do |t|
     t.string   "description"
@@ -50,6 +50,15 @@ ActiveRecord::Schema.define(version: 20140207190026) do
   end
 
   add_index "organizations_users", ["user_id", "organization_id"], name: "index_organizations_users_on_user_id_and_organization_id"
+
+  create_table "payments", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "organization_id"
+    t.float    "amount"
+    t.boolean  "confirmed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

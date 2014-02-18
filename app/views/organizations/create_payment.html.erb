@@ -1,0 +1,22 @@
+<h1>Payment for <%= @organization.name %></h1>
+<form method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
+  <div class="container" style="margin-top:20px;">
+  	<div class="row">
+      <div class="col-xs-6">
+        <div class="form-group" style="max-height: 300px;overflow: auto;">
+					<h3>Current balance is <%= number_to_currency @balance %></h3>
+					<label class="textfield">Payment Amount</label>
+					<div class="input-group">
+						<span class="input-group-addon">$</span>
+						<%= text_field_tag('amount',nil, maxlength: 20, size: 25, class: 'form-control') %>
+					</div>
+					<h2><small>Note: All cash or check payments must be confirmed by Admin</small></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+  <div class="form-group">
+    <input type="submit" value="Submit" class="btn btn-primary" />
+  </div>
+</form>
