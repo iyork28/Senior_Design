@@ -167,6 +167,22 @@ class OrganizationsController < ApplicationController
 
   def pending_payments
     @organization = Organization.find(params[:id])
+    @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+    if not @membership.exists?
+      redirect_to dashboard_path
+    end
+
+    if request.post?
+      @payment_id = params[:payment_id]
+      @payment = Payment.find(@payment_id)
+      if params[:approve_or_reject] == 'approve'
+        @payment.confirmed = true
+        @payment.save
+      else params[:approve_or_reject] == 'reject'
+        @payment.delete
+      end
+    end
+
     @pending_payments = @organization.payments.where(confirmed: false)
   end
 

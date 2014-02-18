@@ -2,7 +2,19 @@
 
 <% @pending_payments.each do |p| %>
 <hr />
-<input type="button" value="Approve" class="btn btn-primary"> <input type="button" value="Reject" class="btn btn-danger">
+<form method="post" action="<%= request.fullpath %>" class="pull-left">
+  <input type="hidden" name="approve_or_reject" value="approve">
+  <input type="hidden" name="payment_id" value="<%= p.id %>">
+  <input type="submit" value="Approve" class="btn btn-primary">
+  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+<form method="post" action="<%= request.fullpath %>" class="pull-left">
+  <input type="hidden" name="approve_or_reject" value="reject">
+  <input type="hidden" name="payment_id" value="<%= p.id %>">
+ <input type="submit" value="Reject" class="btn btn-danger">
+  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+<div class="clearfix"></div>
 <h2><%= number_to_currency p.amount %> by <%= p.user.full_name %></h2>
 <p>Paid by <b><%= p.payment_type %></b> on <b><%= p.created_at.to_time.strftime "%b %e, %l:%M %p" %></b><p>
 <div style="clear: both"></div>
