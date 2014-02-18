@@ -135,6 +135,11 @@ class OrganizationsController < ApplicationController
       @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: params[:id], payment_type: @type)
       @payment_failed = false
 
+      @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+      if @membership.exists?
+        @payment.confirmed = true # admins are auto approved too
+      end
+
       if params[:stripeToken]
         begin
           customer = Stripe::Customer.create(
