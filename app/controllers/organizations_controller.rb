@@ -165,6 +165,11 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  def pending_payments
+    @organization = Organization.find(params[:id])
+    @pending_payments = @organization.payments.where(confirmed: false)
+  end
+
   private
     def organization_params
       params.require(:organization).permit(:name)

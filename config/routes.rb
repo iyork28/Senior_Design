@@ -7,6 +7,7 @@ SeniorDesign::Application.routes.draw do
   match "organizations/:id/edit_admins"   => "organizations#edit_admins", :via => [:get, :post]
   match "organizations/:id/create_charge" => "organizations#create_charge", :via => [:get, :post]
   match "organizations/:id/make_payment"  => "organizations#create_payment", :via => [:get, :post]
+  match "organizations/:id/pending_payments"  => "organizations#pending_payments", :via => [:get, :post]
   resources :organizations
   
   root 'welcome#index'

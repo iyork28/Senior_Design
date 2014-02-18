@@ -1,0 +1,9 @@
+<h1>Pending Payments (<%= @pending_payments.count %>) | <%= @organization.name %></h1>
+
+<% @pending_payments.each do |p| %>
+<hr />
+<input type="button" value="Approve" class="btn btn-primary"> <input type="button" value="Reject" class="btn btn-danger">
+<h2><%= number_to_currency p.amount %> by <%= p.user.full_name %></h2>
+<p>Paid by <b><%= p.payment_type %></b> on <b><%= p.created_at.to_time.strftime "%b %e, %l:%M %p" %></b><p>
+<div style="clear: both"></div>
+<% end %>
