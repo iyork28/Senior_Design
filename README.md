@@ -19,6 +19,18 @@ To run the tests:
 
     rake db:test:prepare # prepares the test database for the tests
     rake test # runs all tests
+
+To enable credit cards:
+
+    Add a stripe.rb file under config/initializers as described in the link below
+    https://stripe.com/docs/checkout/guides/rails#configuration
+
+    If you don't want to use ENV variables, then put the raw string in there
+    The file is not being commited as it is in the .gitignore
+    (ENV variables should be required eventually)
+
+    You might need to sign up for stripe to get api credentials
+
 	
 Here's the link to the Heroku server: [*http://morning-island-4911.herokuapp.com*](http://morning-island-4911.herokuapp.com). Not sure how dynamic this will be, so if it stops working... Oops.
 
