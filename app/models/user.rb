@@ -30,10 +30,8 @@ class User < ActiveRecord::Base
     @org_charges = org.charges.sum(&:amount)
     @personal_org_charges = self.charges.where(organization: org).sum(&:amount)
     @group_charges = 0.0
-    if (self.groups)
-      self.groups.where(organization: org).each do |g|
-        @group_charges += self.get_balance_for_group(g)
-      end
+    self.groups.where(organization: org).each do |g|
+      @group_charges += self.get_balance_for_group(g)
     end
     return @org_charges + @personal_org_charges + @group_charges
   end
