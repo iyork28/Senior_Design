@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
       @group_charges += self.get_balance_for_group(g)
     end
     
-    @payments = self.payments.sum(&:amount)
+    @payments = self.payments.where(organization: org).sum(&:amount)
     
     return @org_charges + @personal_org_charges + @group_charges - @payments
   end
