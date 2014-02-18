@@ -3,7 +3,12 @@
 <label>Pay with:</label><br />
 <input type="button" class="btn btn-primary" id="pay_with_cash" value="Cash">
 <input type="button" class="btn btn-default" id="pay_with_check" value="Check">
+<% begin %>
+<% Rails.configuration.stripe %>
 <input type="button" class="btn btn-default" id="pay_with_card" value="Card">
+<% rescue %>
+<input type="button" class="btn btn-disabled disabled" value="Card (not available)">
+<% end %>
 
 <form id="default-payment" method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
         <div class="form-group" style="max-height: 300px;overflow: auto;">
@@ -20,6 +25,8 @@
   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 </form>
 
+<% begin %>
+<% Rails.configuration.stripe %>
 <form id="card-payment" class="hidden" method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
     <div class="form-group" style="max-height: 300px;overflow: auto;">
       <h3>Current balance is <%= number_to_currency @balance %></h3>
@@ -37,6 +44,8 @@
   </div>
   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 </form>
+<% rescue %>
+<% end %>
 
 <%= params.inspect %>
 
@@ -56,12 +65,16 @@
             $("#card-payment").addClass('hidden');
             $("#cash_or_check").val("check");
         });
+        <% begin %>
+        <% Rails.configuration.stripe %>
         $('#pay_with_card').click(function() {
             $("#pay_with_card").removeClass('btn-default').addClass('btn-primary');
             $("#pay_with_cash, #pay_with_check").removeClass('btn-primary').addClass('btn-default');
             $("#default-payment").addClass('hidden');
             $("#card-payment").removeClass('hidden');
         });
+        <% rescue %>
+        <% end %>
 
     </script>
 <% end %>
