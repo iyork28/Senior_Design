@@ -23,7 +23,7 @@ To run the tests:
 To enable credit cards:
 
     Add a stripe.rb file under config/initializers as described in the link below
-    [*https://stripe.com/docs/checkout/guides/rails#configuration](https://stripe.com/docs/checkout/guides/rails#configuration)
+    https://stripe.com/docs/checkout/guides/rails#configuration
 
     If you don't want to use ENV variables, then put the raw string in there
     The file is not being commited as it is in the .gitignore
