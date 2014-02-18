@@ -44,8 +44,6 @@
     <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 </form>
 
-<%= params.inspect %>
-
 <% content_for :inline_js do %>
 <script>
 $('#charge_organization').click(function() {
