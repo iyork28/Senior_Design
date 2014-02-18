@@ -132,7 +132,7 @@ class OrganizationsController < ApplicationController
       @amount_in_cents = (params[:amount].to_f * 100).to_i
       @amount =  @amount_in_cents / 100.0
 
-      @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: params[:id], payment_type: @type, )
+      @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: params[:id], payment_type: @type)
       @payment_failed = false
 
       if params[:stripeToken]
@@ -148,6 +148,9 @@ class OrganizationsController < ApplicationController
               :description => @organization.name + " payment",
               :currency    => 'usd'
           )
+
+          @payment.confirmed = true # card payments always confirmed
+
         rescue Stripe::CardError => e
           flash[:error] = e.message
           @payment_failed = true
