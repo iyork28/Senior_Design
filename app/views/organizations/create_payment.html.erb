@@ -1,8 +1,11 @@
 <h1>Payment for <%= @organization.name %></h1>
-<form method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
-  <div class="container" style="margin-top:20px;">
-  	<div class="row">
-      <div class="col-xs-6">
+
+<label>Pay with:</label><br />
+<input type="button" class="btn btn-primary" id="pay_with_cash" value="Cash">
+<input type="button" class="btn btn-default" id="pay_with_check" value="Check">
+<input type="button" class="btn btn-default" id="pay_with_card" value="Card">
+
+<form id="default-payment" method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
         <div class="form-group" style="max-height: 300px;overflow: auto;">
 					<h3>Current balance is <%= number_to_currency @balance %></h3>
 					<label class="textfield">Payment Amount</label>
@@ -11,12 +14,54 @@
 						<%= text_field_tag('amount',nil, maxlength: 20, size: 25, class: 'form-control') %>
 					</div>
 					<h2><small>Note: All cash or check payments must be confirmed by Admin</small></h2>
-        </div>
-      </div>
-    </div>
+          <input type="hidden" value="cash" id="cash_or_check" name="cash_or_check" />
+          <input type="submit" value="Submit" class="btn btn-primary" />
   </div>
   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
-  <div class="form-group">
-    <input type="submit" value="Submit" class="btn btn-primary" />
-  </div>
 </form>
+
+<form id="card-payment" class="hidden" method="POST" action= "<%= url_for :controller => :organizations, action: :create_payment %>">
+    <div class="form-group" style="max-height: 300px;overflow: auto;">
+      <h3>Current balance is <%= number_to_currency @balance %></h3>
+      <label class="textfield">Payment Amount</label>
+      <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <%= text_field_tag('amount',nil, maxlength: 20, size: 25, class: 'form-control') %>
+      </div>
+      <br />
+      <script src="https://checkout.stripe.com/checkout.js" id="sripe-script" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description="Organization payment"
+              data-email="<%= current_user.email %>"
+              data-label="Submit"></script>
+  </div>
+  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+
+<%= params.inspect %>
+
+<% content_for :inline_js do %>
+    <script>
+        $('#pay_with_cash').click(function() {
+            $("#pay_with_cash").removeClass('btn-default').addClass('btn-primary');
+            $("#pay_with_card, #pay_with_check").removeClass('btn-primary').addClass('btn-default');
+            $("#default-payment").removeClass('hidden');
+            $("#card-payment").addClass('hidden');
+            $("#cash_or_check").val("cash");
+        });
+        $('#pay_with_check').click(function() {
+            $("#pay_with_check").removeClass('btn-default').addClass('btn-primary');
+            $("#pay_with_card, #pay_with_cash").removeClass('btn-primary').addClass('btn-default');
+            $("#default-payment").removeClass('hidden');
+            $("#card-payment").addClass('hidden');
+            $("#cash_or_check").val("check");
+        });
+        $('#pay_with_card').click(function() {
+            $("#pay_with_card").removeClass('btn-default').addClass('btn-primary');
+            $("#pay_with_cash, #pay_with_check").removeClass('btn-primary').addClass('btn-default');
+            $("#default-payment").addClass('hidden');
+            $("#card-payment").removeClass('hidden');
+        });
+
+    </script>
+<% end %>

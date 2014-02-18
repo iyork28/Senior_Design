@@ -125,8 +125,36 @@ class OrganizationsController < ApplicationController
     @balance = current_user.get_balance_for_organization(@organization)
     
     if request.post?
-      payment = Payment.new(amount: params[:amount], user_id: current_user.id, organization_id: params[:id])
-      if payment.save
+      @type = "card"
+      if params[:cash_or_check]
+        @type = params[:cash_or_check]
+      end
+      @amount_in_cents = (params[:amount].to_f * 100).to_i
+      @amount =  @amount_in_cents / 100.0
+
+      @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: params[:id], payment_type: @type)
+      @payment_failed = false
+
+      if params[:stripeToken]
+        begin
+          customer = Stripe::Customer.create(
+              :email => current_user.email,
+              :card  => params[:stripeToken]
+          )
+
+          charge = Stripe::Charge.create(
+              :customer    => customer.id,
+              :amount      => @amount_in_cents,
+              :description => @organization.name + " payment",
+              :currency    => 'usd'
+          )
+        rescue Stripe::CardError => e
+          flash[:error] = e.message
+          @payment_failed = true
+        end
+      end
+
+      if not @payment_failed and @payment.save
         redirect_to dashboard_path
       else
         flash[:notice] = "Payment Creation Failed"
