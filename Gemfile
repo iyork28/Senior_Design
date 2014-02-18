@@ -56,3 +56,5 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 gem 'devise'
 
 gem 'capybara'
+
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
