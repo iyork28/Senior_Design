@@ -1,9 +1,15 @@
 <h1>Group <%= @group.name %></h1>
+<%= link_to "Back to Group List", { controller: 'organizations', action: 'view_groups' } %>
 
-<ul class="list-group">
-<% @group.users.each do |user| %>
-	<li class="list-group-item">
-		<%= user.full_name %>
-	</li>
-<% end %>
-</ul>
+<table class="table table-striped">
+	<th>User Name</th>
+	<th>Email</th>
+	<th>Balance</th>
+	<% @group.users.each do |user| %>
+	<tr>
+		<td><%= user.full_name %></td>
+		<td><%= user.email %></td>
+		<td>Will be user balance</td>
+	</tr>
+	<% end %>
+</table>
