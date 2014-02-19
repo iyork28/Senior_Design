@@ -85,7 +85,7 @@ class OrganizationsController < ApplicationController
       end
       @amount = params[:amount]
       @description = params[:description]
-      @due_date = params[:due_date]
+      @due_date = Chronic.parse(params[:due_date])
 
       if @chargeable != nil then
         @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
@@ -118,6 +118,14 @@ class OrganizationsController < ApplicationController
   def view_groups
     @org = Organization.find(params[:id])
     @groups = @org.groups
+  end
+  
+  def view_organization_charges
+    @org = Organization.find(params[:id])
+    @groups = @org.groups
+    @charges = current_user.get_all_charges_for_user_from_organization(@org).sort_by(&:due_date)
+    @payments = current_user.get_all_payments_for_user_from_organization(@org).sort_by(&:created_at)
+    @payments_total = @payments.sum(&:amount)
   end
   
   def create_payment

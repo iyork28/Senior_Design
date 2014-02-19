@@ -6,7 +6,7 @@
     <hr />
 <% else %>
     <% @organizations.each do |o| %>
-        <h4><%= o.name %> (<%= o.membership_type(@current_user) %>)</h4>
+        <h4><%= link_to "#{o.name}", {controller: 'organizations', action: 'view_organization_charges', id: o.id} %> (<%= o.membership_type(@current_user) %>)</h4>
         <p>Balance: <%= number_to_currency @current_user.get_balance_for_organization o %></p>
 				<%= link_to 'Make Payment', 			{controller: 'organizations', action: 'create_payment', id: o.id} %><br/>
         <% if o.is_admin(@current_user) %>

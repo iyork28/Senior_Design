@@ -57,4 +57,6 @@ gem 'devise'
 
 gem 'capybara'
 
+gem 'chronic'
+
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'

@@ -40,6 +40,24 @@ class User < ActiveRecord::Base
     return @org_charges + @personal_org_charges + @group_charges - @payments
   end
   
+  def get_all_charges_for_user_from_organization (org)
+    @org_charges = org.charges
+    @personal_org_charges = self.charges.where(organization: org)
+    @org_charges.append(@personal_org_charges)
+    self.groups.where(organization: org).each do |g|
+      @org_charges.append(g.charges)
+    end
+    return @org_charges
+  end
+  
+  def get_all_payments_for_user_from_organization (org)
+    @payments = self.payments.where(organization: org)
+  end
+  
+  def get_charges_for_group (group)
+    @group_charges = group.charges
+  end
+  
   def get_balance_for_group (group)
     @group_charges = group.charges.sum(&:amount)
     return @group_charges
