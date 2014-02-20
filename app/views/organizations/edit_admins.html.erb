@@ -3,12 +3,11 @@
     <div class="container" style="margin-top:20px;">
     	<div class="row">
             <div class="col-xs-6">
-                <h3 class="text-center">Select new Admins</h3>
+	            <h3 class="text-center">Select new Admins</h3>
                 <div class="well" style="max-height: 300px;overflow: auto;">         		
-            	      <% @users.each do |u| %>
-                      <label class="checkbox"><%= check_box_tag("newadmins[]", u.id) %><%= u.full_name %></label>
-                      <% end %>
-                
+	    	    	<% @users.each do |u| %>
+                		<label class="checkbox"><%= check_box_tag("newadmins[]", u.id) %><%= u.full_name %></label>
+            		<% end %>
                 </div>
             </div>
             <div class="col-xs-6">

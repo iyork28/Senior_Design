@@ -1,9 +1,16 @@
 <h1>Groups for <%= @org.name %></h1>
+<%= link_to "Return to Dashboard", { controller: 'welcome', action: 'dashboard' } %>
+<br/><br/>
 
-<ul class="list-group">
-<% @groups.each do |group| %>
-	<li class="list-group-item">
-		<%= group.name %> | <%= link_to("Show Members", {controller: 'groups', action: 'show', id: group.id}) %>
-	</li>
-<% end %>
-</ul>
+<table class="table table-striped">
+	<th>Group Name</th>
+	<th>Actions</th>
+
+	<% @groups.each do |group| %>
+	<tr>
+		<td><%= group.name %></td>
+		<td><%= link_to("Show Members", {controller: 'groups', action: 'show', id: group.id}) %> | 
+			<%= link_to("Edit Group", {controller: 'groups', action: 'edit', id: group.id}) %></td>
+	</tr>
+	<% end %>
+</table>
