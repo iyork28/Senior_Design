@@ -1,0 +1,81 @@
+<table>
+<tr>
+	<td>
+		<h1 align="left"><%= @org.name %> | <%= @member.full_name%></h1>
+	</td>
+	<td>
+		<h4 align="right"><%= link_to 'Back to All Members',   {controller: 'organizations', action: 'view_organization_members', id: @org.id }%></h4>
+	</td>
+</tr>
+</table>
+<h3>Total Balance: <%= number_to_currency @member.get_balance_for_organization @org %></h3>
+<br>
+<h4>Unpaid Charges</h4>
+<table border="1">
+<tr>
+  <th>DESCRIPTION</th>
+  <th>AMOUNT</th> 
+  <th>DUE DATE</th>
+</tr>
+<% @temp_val = @payments_total %>
+<% @charges.each do |charge| %>
+	<% if @temp_val >= charge.amount %>
+		<% @temp_val -= charge.amount %>
+	<% elsif @temp_val > 0 %>
+		<tr>
+			<td><%= charge.description  %> </td>
+			<td>$<%= "%.2f" % charge.amount %> <font color="red">(Partial Payment! Still Owe: $<%= "%.2f" % (charge.amount - @temp_val) %>)</font> </td>
+			<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
+		</tr>
+		<% @temp_val = 0 %>
+	<% else %>
+		<tr>
+			<td><%= charge.description  %> </td>
+			<td>$<%= "%.2f" % charge.amount %> </td>
+			<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
+		</tr>
+	<% end %>
+<% end %>
+</table>
+<br>
+<h4>Payments</h4>
+<table border="1">
+<tr>
+  <th>DATE</th>
+  <th>AMOUNT</th> 
+  <th>TYPE</th>
+  <th>CONFIRMED BY ADMIN?</th>
+</tr>
+<% @payments.each do |payment| %>
+	<tr>
+		<td><%= payment.created_at.strftime('%d %b %Y')  %> </td>
+		<td>$<%= "%.2f" % payment.amount %> </td>
+		<td><%= payment.payment_type %>
+		<%if payment.confirmed %>
+			<td>Yes</td>
+		<%else%>
+			<td>No</td>
+		<%end%>
+	</tr>
+<% end %>
+</table>
+<br>
+<h4>Paid Charges</h4>
+<table border="1">
+<tr>
+  <th>DESCRIPTION</th>
+  <th>AMOUNT</th> 
+  <th>DUE DATE</th>
+</tr>
+<% @temp_val = @payments_total %>
+<% @charges.each do |charge| %>
+	<% if @temp_val >= charge.amount %>
+		<tr>
+			<td><%= charge.description  %> </td>
+			<td>$<%= "%.2f" % charge.amount %> </td>
+			<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
+		</tr>
+		<% @temp_val -= charge.amount %>
+	<% end %>
+<% end %>
+</table>

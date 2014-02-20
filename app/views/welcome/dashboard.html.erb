@@ -15,7 +15,9 @@
           <%= link_to 'Create Charge', 		{:controller => 'organizations', :action => 'create_charge', :id => o.id} %> |
         	<%= link_to 'Edit Admins', 			{:controller => 'organizations', :action => 'edit_admins', :id => o.id} %> <br/>
 					<%= link_to 'Create New Group', {controller: 'organizations', action: 'create_group', id: o.id } %> | 
-					<%= link_to 'View Groups', 			{controller: 'organizations', action: 'view_groups', id: o.id} %>
+					<%= link_to 'View Groups', 			{controller: 'organizations', action: 'view_groups', id: o.id} %> <br/>
+					<%= link_to 'View Organization Members', 			{controller: 'organizations', action: 'view_organization_members', id: o.id} %>
+					
 
         <% end %>
         <hr />

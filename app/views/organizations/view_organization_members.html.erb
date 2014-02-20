@@ -1,0 +1,23 @@
+<h1><%= @org.name %> | Membership</h1>
+<br>
+<table border="1">
+	<tr>
+		<th>MEMBER</th>
+		<th>ASSOCIATED GROUPS</th>
+		<th>BALANCE</th>
+	</tr>
+	<% @members.each do |member| %>
+	<tr>
+		<td><%= link_to "#{member.full_name}", {controller: 'organizations', action: 'admin_view_org_member', mid: "#{member.id}", oid: "#{@org.id}"} %></td>
+		<% @groups = member.groups %>
+		<td> <% @groups.each do |group|%>
+			 	<%= group.name %><% if group != @groups.last %>, 
+			 	<% end %>
+		 	<% end %>
+		 	<% if @groups.empty? %>N/A
+		 	<% end %>
+		 </td>
+		<td> $<%= "%.2f" % member.get_balance_for_organization(@org)%> </td>
+	</tr>
+	<% end %>
+</table>

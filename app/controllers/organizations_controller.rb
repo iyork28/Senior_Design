@@ -128,6 +128,19 @@ class OrganizationsController < ApplicationController
     @payments_total = @payments.sum(&:amount)
   end
   
+  def view_organization_members
+    @org = Organization.find(params[:id])
+    @members = @org.users
+  end
+  
+  def admin_view_org_member
+    @member = User.find(params[:mid])
+    @org = Organization.find(params[:id])
+    @charges = @member.get_all_charges_for_user_from_organization(@org).sort_by(&:due_date)
+    @payments = @member.get_all_payments_for_user_from_organization(@org).sort_by(&:created_at)
+    @payments_total = @payments.sum(&:amount)
+  end
+  
   def create_payment
     @organization = Organization.find(params[:id])
     @balance = current_user.get_balance_for_organization(@organization)
@@ -198,6 +211,7 @@ class OrganizationsController < ApplicationController
 
     @pending_payments = @organization.payments.where(confirmed: false)
   end
+  
 
   private
     def organization_params
