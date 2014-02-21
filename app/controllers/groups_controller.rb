@@ -48,7 +48,7 @@ class GroupsController < ApplicationController
   def destroy
     group = Group.find(params[:id])
     group.destroy
-    flash[:notice] = "Delete group #{group.name}"
+    flash[:success] = "Deleted Group #{group.name}"
     redirect_to controller: 'organizations', action: 'view_groups', id: group.organization_id
   end
 end
