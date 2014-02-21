@@ -107,10 +107,10 @@ class OrganizationsController < ApplicationController
         User.find(params[:added_users]).each do |user|
           GroupMembership.create(group_id: group.id, user_id: user.id)
         end
-        flash[:notice] = "Group Created"
+        flash[:success] = "Group Created"
         redirect_to dashboard_path
       else
-        flash[:notice] = "Group Creation Failed"
+        flash[:fail] = "Group Creation Failed"
       end
     end
   end
