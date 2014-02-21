@@ -36,6 +36,8 @@ class GroupsController < ApplicationController
       members_to_add.each do |user_id|
         GroupMembership.create(group_id: @group.id, user_id: user_id)
       end
+      
+      
     end
   end
 end
