@@ -2,7 +2,7 @@
 <h3>Total Balance: <%= number_to_currency current_user.get_balance_for_organization @org %></h3>
 <br>
 <h4>Unpaid Charges</h4>
-<table border="1">
+<table class="table table-striped">
 <tr>
   <th>DESCRIPTION</th>
   <th>AMOUNT</th> 
@@ -30,7 +30,7 @@
 </table>
 <br>
 <h4>Payments</h4>
-<table border="1">
+<table class="table table-striped">
 <tr>
   <th>DATE</th>
   <th>AMOUNT</th> 
@@ -52,7 +52,7 @@
 </table>
 <br>
 <h4>Paid Charges</h4>
-<table border="1">
+<table class="table table-striped">
 <tr>
   <th>DESCRIPTION</th>
   <th>AMOUNT</th> 
