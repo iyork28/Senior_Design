@@ -38,4 +38,15 @@ class GroupsController < ApplicationController
       end
     end
   end
+  
+  def delete
+    @group = Group.find(params[:id])
+  end
+  
+  def destroy
+    group = Group.find(params[:id])
+    group.destroy
+    flash[:notice] = "Delete group #{group.name}"
+    redirect_to controller: 'organizations', action: 'view_groups', id: group.organization_id
+  end
 end

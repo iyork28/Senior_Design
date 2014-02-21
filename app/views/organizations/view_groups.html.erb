@@ -10,7 +10,9 @@
 	<tr>
 		<td><%= group.name %></td>
 		<td><%= link_to("Show Members", {controller: 'groups', action: 'show', id: group.id}) %> | 
-			<%= link_to("Edit Group", {controller: 'groups', action: 'edit', id: group.id}) %></td>
+			<%= link_to("Edit Group", {controller: 'groups', action: 'edit', id: group.id}) %> | 
+			<%= link_to("Delete Group", {controller: 'groups', action: 'delete', id: group.id}) %>
+		</td>
 	</tr>
 	<% end %>
 </table>
