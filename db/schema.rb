@@ -26,8 +26,14 @@ ActiveRecord::Schema.define(version: 20140221173156) do
 
   add_index "charges", ["organization_id"], name: "index_charges_on_organization_id"
 
-# Could not dump table "groups" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "groups", force: true do |t|
+    t.integer  "organization_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+  end
+
+  add_index "groups", ["name"], name: "index_groups_on_name", unique: true
 
   create_table "groups_users", force: true do |t|
     t.integer "group_id"

@@ -1,5 +1,5 @@
 class AddOrganizationRefToGroups < ActiveRecord::Migration
   def change
-    add_column :groups, :organization, :reference
+    add_reference :groups, :organization
   end
 end
