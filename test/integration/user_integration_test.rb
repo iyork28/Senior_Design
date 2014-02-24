@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class OrganizationTest < ActionDispatch::IntegrationTest
+class UserIntegrationTest < ActionDispatch::IntegrationTest
   test "user sign in fail" do
     visit new_user_session_path
     fill_in 'user_email', with: 'clay@goddard.com'
