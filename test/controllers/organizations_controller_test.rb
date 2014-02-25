@@ -56,4 +56,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_not assigns(:membership)
     assert_response :success
   end
+  
+  test "make payment"
 end

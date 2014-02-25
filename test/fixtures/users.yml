@@ -10,3 +10,9 @@ clay:
   last_name: goddard
   email: clay@clay.com
   encrypted_password: 123123123  # not actually encrypted (obviously)
+
+ian:
+  first_name: ian
+  last_name: york
+  email: ian@ian.com
+  encrypted_password: 12345678

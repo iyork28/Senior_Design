@@ -3,13 +3,15 @@
 <!-- <table border="1"> -->
 <table class="table table-striped">
 	<tr>
-		<th>MEMBER</th>
+		<th>NAME</th>
+		<th>EMAIL</th>
 		<th>ASSOCIATED GROUPS</th>
 		<th>BALANCE</th>
 	</tr>
 	<% @members.each do |member| %>
 	<tr>
 		<td><%= link_to "#{member.full_name}", {controller: 'organizations', action: 'admin_view_org_member', mid: "#{member.id}", oid: "#{@org.id}"} %></td>
+		<td><%= member.email %></td>
 		<% @groups = member.groups %>
 		<td> <% @groups.each do |group|%>
 			 	<%= group.name %><% if group != @groups.last %>, 

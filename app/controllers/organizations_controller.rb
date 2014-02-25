@@ -184,9 +184,12 @@ class OrganizationsController < ApplicationController
       end
 
       if not @payment_failed and @payment.save
+        @organization.admins.each do |admin|
+          AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+        end
         redirect_to dashboard_path
       else
-        flash[:notice] = "Payment Creation Failed"
+        flash[:error] = "Payment Creation Failed"
       end
     end
   end
