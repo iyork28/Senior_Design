@@ -33,6 +33,16 @@ class OrganizationsController < ApplicationController
     @organizations = Organization.order(:name)
   end
   
+
+  def organization_admin
+    @organization = Organization.find(params[:id])
+    @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+    if not @membership.exists?
+      redirect_to controller: 'welcome', action: 'dashboard'
+    end
+  end
+
+
   def list_users
     @users = Organization.find(params[:id]).users
   end

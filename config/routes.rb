@@ -8,6 +8,7 @@ SeniorDesign::Application.routes.draw do
   match "organizations/:id/admin_view_org_member"     => "organizations#admin_view_org_member", :via => [:get, :post]
   match "organizations/join"                          => "organizations#join", :via => [:get, :post]
   match "organizations/:id/edit_admins"               => "organizations#edit_admins", :via => [:get, :post]
+  match "organizations/:id/organization_admin"        => "organizations#organization_admin", :via => :get
   match "organizations/:id/create_charge"             => "organizations#create_charge", :via => [:get, :post]
   match "organizations/:id/make_payment"              => "organizations#create_payment", :via => [:get, :post]
   match "organizations/:id/pending_payments"          => "organizations#pending_payments", :via => [:get, :post]
