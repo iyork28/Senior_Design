@@ -98,7 +98,7 @@ class OrganizationsController < ApplicationController
       @due_date = Chronic.parse(params[:due_date])
 
       if @chargeable != nil then
-        @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
+        @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization, chargeable: @chargeable)
         @charge.save
         redirect_to dashboard_url
       end

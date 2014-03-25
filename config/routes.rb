@@ -3,7 +3,7 @@ SeniorDesign::Application.routes.draw do
   match "groups/:id/show"                             => "groups#show", :via => :get
   match "organizations/:id/view_groups"               => "organizations#view_groups", :via => :get
   match "organizations/:id/create_group"              => "organizations#create_group", :via => [:get, :post]
-  match "organizations/:id/view_organization_charges" => "organizations#view_organization_charges", :via => [:get, :post]
+  match "organizations/:id/view_organization_charges" => "organizations#view_organization_charges", :via => :get
   match "organizations/:id/view_organization_members" => "organizations#view_organization_members", :via => [:get, :post]
   match "organizations/:id/admin_view_org_member"     => "organizations#admin_view_org_member", :via => [:get, :post]
   match "organizations/join"                          => "organizations#join", :via => [:get, :post]
