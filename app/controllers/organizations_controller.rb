@@ -251,6 +251,22 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  def edit_organization_information
+    @organization = Organization.find(params[:id])
+    if request.post?
+      @validate_submit = params[:validate_submit] == "true"
+      if (@validate_submit)
+         @temp_name = params[:name]
+         if (@temp_name != nil && !@temp_name.empty?)
+           @organization.name = @temp_name
+         end
+    
+         @organization.save
+      end
+      redirect_to :controller => 'organizations', :action => 'organization_admin'
+    end
+  end
+
   def pending_payments
     @organization = Organization.find(params[:id])
     @membership = Membership.where(user: current_user, organization: @organization, admin: true)
