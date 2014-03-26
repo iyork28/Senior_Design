@@ -9,6 +9,7 @@
 		<th>EMAIL</th>
 		<th>ASSOCIATED GROUPS</th>
 		<th>BALANCE</th>
+		<th>ACTION</th>
 	</tr>
 	<% @members.each do |member| %>
 	<tr>
@@ -23,6 +24,7 @@
 		 	<% end %>
 		 </td>
 		<td> $<%= "%.2f" % member.get_balance_for_organization(@org)%> </td>
+		<td><%= link_to "Remove from organization", {controller: 'organizations', action: 'admin_remove_user', mid: "#{member.id}"} %></td>
 	</tr>
 	<% end %>
 </table>

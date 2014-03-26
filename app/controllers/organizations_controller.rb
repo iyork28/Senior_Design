@@ -197,6 +197,24 @@ class OrganizationsController < ApplicationController
     @payments = @member.get_all_payments_for_user_from_organization(@org).sort_by(&:created_at)
     @payments_total = @payments.sum(&:amount)
   end
+
+  def admin_remove_user
+    member = User.find(params[:mid])
+    org = Organization.find(params[:id])
+    if member != current_user
+      admin_membership = Membership.where(user: current_user, organization: org, admin: true)
+      if admin_membership.exists?
+        membership = Membership.find_by(user: member, organization: org)
+        if membership
+          membership.delete
+          flash[:success] = "Member Removed"
+        end
+      end
+    else
+      flash[:error] = "You can't remove yourself"
+    end
+    redirect_to :controller => 'organizations', :action => 'view_organization_members', :id => org.id
+  end
   
   def create_payment
     @organization = Organization.find(params[:id])
