@@ -9,7 +9,6 @@
   <th>DUE DATE</th>
 </tr>
 <% @temp_val = @payments_total %>
-<%= @charges.class %>
 <% @charges.each do |charge| %>
 	<% if @temp_val >= charge.amount %>
 		<% @temp_val -= charge.amount %>
