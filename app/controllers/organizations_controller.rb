@@ -133,6 +133,19 @@ class OrganizationsController < ApplicationController
    
     end
   end
+  
+  def delete_charge
+    @charge = Charge.find(params[:charge_id])
+    @organization = Organization.find(params[:id])
+    if request.post?
+      @validate_delete = params[:validate_delete] == "true"
+      if (@validate_delete)
+         @charge.destroy
+      end
+      redirect_to controller: 'organizations', action: 'view_charges'
+   
+    end
+  end
 
   def view_charges
     @organization = Organization.find(params[:id])
