@@ -104,6 +104,40 @@ class OrganizationsController < ApplicationController
       end
     end
   end
+
+  def edit_charge
+    @charge = Charge.find(params[:charge_id])
+    @organization = Organization.find(params[:id])
+    @users = @organization.users.order(:last_name)
+    @groups = @organization.groups.order(:name)
+    if request.post?
+      @chargeable = nil
+      @charge_to = params[:charge_to]
+
+      case @charge_to
+        when 'User'
+          @chargeable = User.find(params[:user])
+        when 'Group'
+          @chargeable = Group.find(params[:group])
+        when 'Organization'
+          @chargeable = @organization
+      end
+      @charge.amount = params[:amount]
+      @charge.description = params[:description]
+      @charge.due_date = Chronic.parse(params[:due_date])
+      @charge.chargeable_id = @chargeable.id
+      @charge.chargeable_type = @charge_to
+     
+      @charge.save
+      redirect_to controller: 'organizations', action: 'view_charges'
+   
+    end
+  end
+
+  def view_charges
+    @organization = Organization.find(params[:id])
+    @charges = Charge.where(organization_id: @organization.id)
+  end
   
   def create_group
     @org = Organization.find(params[:id])

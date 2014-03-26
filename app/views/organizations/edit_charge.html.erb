@@ -1,0 +1,122 @@
+<h1>Edit Charge</h1>
+<h3>Charge ID: <%= @charge.id %></h3>
+<form method="POST" action="<%= url_for :controller => :organizations, :action => :edit_charge %>">
+    <div class="form-group">
+        <label>Charge to:</label><br/>
+        <input type="hidden" id="charge_id" name="charge_id" value="<%= @charge.id %>"> 
+        <input type="hidden" id="charge_id" name="id" value="<%= @organization.id %>">
+<% if @charge.chargeable_type == 'Organization' %>
+        <input type="button" class="btn btn-primary" id="charge_organization" value="Organization">
+        <input type="button" class="btn btn-default" id="charge_group" value="Group">
+        <input type="button" class="btn btn-default" id="charge_user" value="User">
+        <input type="hidden" id="charge_to" name="charge_to" value="Organization">
+	</div>
+    <div class="form-group hidden" id="user_selections">
+        <label for="user">User:</label><br />
+        <select class="form-control" name="user">
+            <% @users.each do |u| %>
+                <option value="<%= u.id %>"><%= u.last_name %>, <%= u.first_name %> (<%= u.email %>)</option>
+            <% end %>
+        </select>
+    </div>
+    <div class="form-group hidden" id="group_selections">
+    <label for="user">Group:</label><br />
+        <select class="form-control" name="group">
+          <% @groups.each do |g| %>
+              <option value="<%= g.id %>"><%= g.name %> (<%= g.users.count %> users)</option>
+          <% end %>
+        </select>
+    </div>
+
+<% elsif @charge.chargeable_type == 'Group' %>
+        	<input type="button" class="btn btn-default" id="charge_organization" value="Organization">
+	        <input type="button" class="btn btn-primary" id="charge_group" value="Group">
+	        <input type="button" class="btn btn-default" id="charge_user" value="User">
+	        <input type="hidden" id="charge_to" name="charge_to" value="Group">
+	</div>
+    <div class="form-group hidden" id="user_selections">
+        <label for="user">User:</label><br />
+        <select class="form-control" name="user">
+            <% @users.each do |u| %>
+                <option value="<%= u.id %>"><%= u.last_name %>, <%= u.first_name %> (<%= u.email %>)</option>
+            <% end %>
+        </select>
+    </div>
+    <div class="form-group" id="group_selections">
+    <label for="user">Group:</label><br />
+        <select class="form-control" name="group">
+          <% @groups.each do |g| %>
+              <option value="<%= g.id %>"<%if g.id == @charge.chargeable_id %>selected="selected"<%end%>><%= g.name %> (<%= g.users.count %> users) </option>
+          <% end %>
+        </select>
+    </div>
+	 
+<% else @charge.chargeable_type == "User" %>
+	   		<input type="button" class="btn btn-default" id="charge_organization" value="Organization">
+	        <input type="button" class="btn btn-default" id="charge_group" value="Group">
+	        <input type="button" class="btn btn-primary" id="charge_user" value="User">
+	        <input type="hidden" id="charge_to" name="charge_to" value="User">
+	</div>
+    <div class="form-group" id="user_selections">
+        <label for="user">User:</label><br />
+        <select class="form-control" name="user">
+            <% @users.each do |u| %>
+                <option value="<%= u.id %>"<%if u.id == @charge.chargeable_id %>selected="selected"<%end%>><%= u.last_name %>, <%= u.first_name %> (<%= u.email %>)</option>
+            <% end %>
+        </select>
+    </div>
+    <div class="form-group hidden" id="group_selections">
+    <label for="user">Group:</label><br />
+        <select class="form-control" name="group">
+          <% @groups.each do |g| %>
+              <option value="<%= g.id %>"><%= g.name %> (<%= g.users.count %> users)</option>
+          <% end %>
+        </select>
+    </div>
+<% end %>
+
+    <div class="form-group">
+        <label for="amount">Amount:</label><br />
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" class="form-control" name="amount" value="<%= "%.2f" % @charge.amount %>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label><br />
+        <textarea class="form-control" name="description"><%= @charge.description %></textarea>
+    </div>
+    <div class="form-group">
+        <label for="due_date">Due date:</label><br />
+        <input type="date" class="form-control" name="due_date" value="<%= @charge.due_date.strftime('%d %b %Y') %>">
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+
+<% content_for :inline_js do %>
+<script>
+$('#charge_organization').click(function() {
+    $("#user_selections, #group_selections").addClass("hidden");
+    $(this).addClass("btn-primary").removeClass("btn-default");
+    $("#charge_group, #charge_user").addClass("btn-default").removeClass("btn-primary");
+    $("#charge_to").val("Organization");
+});
+$('#charge_group').click(function() {
+    $("#user_selections").addClass("hidden");
+    $("#group_selections").removeClass("hidden");
+    $(this).addClass("btn-primary").removeClass("btn-default");
+    $("#charge_organization, #charge_user").addClass("btn-default").removeClass("btn-primary");
+    $("#charge_to").val("Group");
+});
+$('#charge_user').click(function() {
+    $("#user_selections").removeClass("hidden");
+    $("#group_selections").addClass("hidden");
+    $(this).addClass("btn-primary").removeClass("btn-default");
+    $("#charge_group, #charge_organization").addClass("btn-default").removeClass("btn-primary");
+    $("#charge_to").val("User");
+});
+</script>
+<% end %>

@@ -10,12 +10,16 @@ SeniorDesign::Application.routes.draw do
   match "organizations/:id/edit_admins"               => "organizations#edit_admins", :via => [:get, :post]
   match "organizations/:id/organization_admin"        => "organizations#organization_admin", :via => :get
   match "organizations/:id/create_charge"             => "organizations#create_charge", :via => [:get, :post]
+  match "organizations/:id/view_charges"              => "organizations#view_charges", :via => [:get, :post]
+  match "organizations/:id/edit_charge"               => "organizations#edit_charge", :via => [:get, :post]
   match "organizations/:id/make_payment"              => "organizations#create_payment", :via => [:get, :post]
   match "organizations/:id/pending_payments"          => "organizations#pending_payments", :via => [:get, :post]
   match "groups/:id/edit"                             => "groups#edit", :via => [:get, :post]
   match "groups/:id/delete"                           => "groups#delete", :via => [:get]
   match "groups/:id/destroy"                          => "groups#destroy", :via => [:post]
   resources :organizations
+  
+  resources :charge
   
   root 'welcome#index'
   
