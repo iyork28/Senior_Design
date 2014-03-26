@@ -41,13 +41,14 @@ class User < ActiveRecord::Base
   end
   
   def get_all_charges_for_user_from_organization (org)
-    @org_charges = org.charges
-    @personal_org_charges = self.charges.where(organization: org)
-    @org_charges.append(@personal_org_charges)
+    @org_charges = Charge.where(organization_id: org, chargeable_id: org, chargeable_type: "Organization")
+    @personal_charges = Charge.where(organization_id: org, chargeable_id: self, chargeable_type: 'User')
+    @group_charges = Array.new
+    
     self.groups.where(organization: org).each do |g|
-      @org_charges.append(g.charges)
+      @group_charges += Charge.where(organization_id: org, chargeable_id: g, chargeable_type: 'Group')
     end
-    return @org_charges
+    return @group_charges + @org_charges + @personal_charges
   end
   
   def get_all_payments_for_user_from_organization (org)
