@@ -21,7 +21,7 @@ SeniorDesign::Application.routes.draw do
   match "groups/:id/delete"                           => "groups#delete", :via => [:get]
   match "groups/:id/destroy"                          => "groups#destroy", :via => [:post]
   resources :organizations
-  resources :users
+  
   resources :charge
   
   root 'welcome#index'

@@ -23,4 +23,8 @@ class UsersController < ApplicationController
       redirect_to dashboard_url
     end
   end
+  
+  def destroy
+    
+  end
 end
