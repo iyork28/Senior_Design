@@ -9,7 +9,7 @@
 	<tr>
 		<td><%= user.full_name %></td>
 		<td><%= user.email %></td>
-		<td>Will be user balance</td>
+		<td>$<%= "%.2f" % user.get_outstanding_balance_for_group(@group)%></td>
 	</tr>
 	<% end %>
 </table>

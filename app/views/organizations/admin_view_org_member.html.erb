@@ -79,6 +79,8 @@
 			<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
 		</tr>
 		<% @temp_val -= charge.amount %>
+	<% elsif @temp_val < charge.amount %>
+		<% @temp_val = 0 %>
 	<% end %>
 <% end %>
 </table>

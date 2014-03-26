@@ -51,6 +51,64 @@ class User < ActiveRecord::Base
     return @group_charges + @org_charges + @personal_charges
   end
   
+  def get_outstanding_balance_for_group(group)
+    #returns zero when the user has more payment value than charge value (credit situation)
+    @user_balance_for_group = 0
+    @user_charges = self.get_all_charges_for_user_from_organization(group.organization).sort_by(&:due_date)
+    @user_payments = self.get_all_payments_for_user_from_organization(group.organization).sort_by(&:created_at)
+    @partial_payment = 0;
+    
+    if (!@user_payments.empty?)
+      @current_payment = @user_payments.first.amount
+    end
+    if (!@user_charges.empty?)
+      @current_charge = @user_charges.first.amount
+    end
+    while (!@user_payments.empty?) && (!@user_charges.empty?) do
+      if (@current_payment > @current_charge)
+        @current_payment -= @current_charge
+        @user_charges.delete_at(0)
+        if (@user_charges.first != nil)
+          @current_charge = @user_charges.first.amount
+        end
+      elsif (@current_payment < @current_charge)
+        @partial_payment = @current_payment
+        @current_charge -= @current_payment
+        @user_payments.delete_at(0)
+        if (@user_payments.first != nil)
+          @current_payment = @user_payments.first.amount
+          @partial_payment = 0;
+        end
+      else
+        @user_charges.delete_at(0)
+        if (@user_charges.first != nil)
+          @current_charge = @user_charges.first.amount
+        end
+        @user_payments.delete_at(0)
+        if (@user_payments.first != nil)
+          @current_payment = @user_payments.first.amount
+        end
+      end
+      
+    end
+    if (!@user_charges.empty?)
+      @charge = @user_charges.first
+      if ((@charge.chargeable_type == 'Group') && (@charge.chargeable_id == group.id) && (@charge.organization_id == group.organization_id))
+        @user_balance_for_group -= @partial_payment
+      end
+    end
+ 
+    if (@user_payments.empty?)
+      @user_charges.keep_if {|charge| (charge.chargeable_type == 'Group') && (charge.chargeable_id == group.id) && (charge.organization_id == group.organization_id)}
+      @user_charges.each do |charge|
+        @user_balance_for_group += charge.amount
+      end
+ 
+    end
+    
+    return @user_balance_for_group
+  end
+  
   def get_all_payments_for_user_from_organization (org)
     @payments = self.payments.where(organization: org)
   end
