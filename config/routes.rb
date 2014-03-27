@@ -18,7 +18,6 @@ SeniorDesign::Application.routes.draw do
   match "organizations/:id/make_payment"              => "organizations#create_payment", :via => [:get, :post]
   match "organizations/:id/pending_payments"          => "organizations#pending_payments", :via => [:get, :post]
   match "organizations/:id/edit_organization_information" => "organizations#edit_organization_information", :via => [:get, :post]
-  match "users/edit_account_information"              => "users#edit_account_information", :via => [:get, :post]
   match "groups/:id/edit"                             => "groups#edit", :via => [:get, :post]
   match "groups/:id/delete"                           => "groups#delete", :via => [:get]
   match "groups/:id/destroy"                          => "groups#destroy", :via => [:post]
