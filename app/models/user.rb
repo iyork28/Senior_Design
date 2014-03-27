@@ -28,26 +28,28 @@ class User < ActiveRecord::Base
 
   def get_balance_for_organization (org)
     # fill in with amounts of payments
-    @org_charges = org.charges.sum('amount')
-    @personal_org_charges = self.charges.where(organization: org).sum('amount')
-    @group_charges = 0.0
-    self.groups.where(organization: org).each do |g|
-      @group_charges += self.get_balance_for_group(g)
+    @charges = self.get_all_charges_for_user_from_organization(org)
+    @charges_sum = 0
+    @charges.each do |charge|
+      @charges_sum += charge.amount
     end
-    
     @payments = self.payments.where(organization: org).sum('amount')
     
-    return @org_charges + @personal_org_charges + @group_charges - @payments
+    return @charges_sum - @payments
   end
   
   def get_all_charges_for_user_from_organization (org)
     @org_charges = Charge.where(organization_id: org, chargeable_id: org, chargeable_type: "Organization")
+    @org_charges.keep_if{|charge| charge.created_at >= self.created_at}
     @personal_charges = Charge.where(organization_id: org, chargeable_id: self, chargeable_type: 'User')
+    @personal_charges.keep_if{|charge| charge.created_at >= self.created_at}
     @group_charges = Array.new
     
     self.groups.where(organization: org).each do |g|
       @group_charges += Charge.where(organization_id: org, chargeable_id: g, chargeable_type: 'Group')
     end
+    @group_charges.keep_if{|charge| charge.created_at >= self.created_at}
+    
     return @group_charges + @org_charges + @personal_charges
   end
   
