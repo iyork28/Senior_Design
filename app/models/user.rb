@@ -40,15 +40,15 @@ class User < ActiveRecord::Base
   
   def get_all_charges_for_user_from_organization (org)
     @org_charges = Charge.where(organization_id: org, chargeable_id: org, chargeable_type: "Organization")
-    @org_charges.keep_if{|charge| charge.created_at >= self.created_at}
+    @org_charges.keep_if{|charge| charge.due_date >= org.get_membership_timestamp_for_user(self)}
     @personal_charges = Charge.where(organization_id: org, chargeable_id: self, chargeable_type: 'User')
-    @personal_charges.keep_if{|charge| charge.created_at >= self.created_at}
+    @personal_charges.keep_if{|charge| charge.due_date >= self.created_at}
     @group_charges = Array.new
     
     self.groups.where(organization: org).each do |g|
       @group_charges += Charge.where(organization_id: org, chargeable_id: g, chargeable_type: 'Group')
+      @group_charges.keep_if{|charge| charge.due_date >= g.get_membership_timestamp_for_user(self)}
     end
-    @group_charges.keep_if{|charge| charge.created_at >= self.created_at}
     
     return @group_charges + @org_charges + @personal_charges
   end

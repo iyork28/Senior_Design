@@ -15,4 +15,9 @@ class Group < ActiveRecord::Base
     return @outstanding_group_balance
   end
   
+  def get_membership_timestamp_for_user(user)
+    @membership = GroupMembership.where(user_id: user.id, group_id: self.id).first
+    return @membership.read_attribute(:timestamp)
+  end
+  
 end
