@@ -1,5 +1,6 @@
 class OrganizationsController < ApplicationController
   before_filter :authenticate_user!
+  before_action :check_admin!, only: [:organization_admin, :edit_admins, :create_charge, :delete_charge, :admin_view_org_member, :admin_remove_user, :edit_organization_information, :pending_payments]
 
   def new
     @organization = Organization.new
@@ -260,7 +261,11 @@ class OrganizationsController < ApplicationController
 
       if not @payment_failed and @payment.save
         @organization.admins.each do |admin|
-          AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          begin
+            AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          rescue Exception => e
+            flash[:error] = e.message
+          end
         end
         redirect_to dashboard_path
       else
@@ -310,5 +315,13 @@ class OrganizationsController < ApplicationController
   private
     def organization_params
       params.require(:organization).permit(:name)
+    end
+    
+    def check_admin!
+      if current_user.is_admin_for_org?(params[:id]) == true
+        flash[:notice] = current_user.is_admin_for_org?(params[:id])
+      else
+        redirect_to root_path, notice:"You don't have permissions to view this"
+      end
     end
 end
