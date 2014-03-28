@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
   before_filter :authenticate_user!
-  before_action :check_admin!, only: [:organization_admin, :edit_admins, :create_charge, :delete_charge, :admin_view_org_member, :admin_remove_user, :edit_organization_information, :pending_payments]
+  before_action :check_admin!, only: [:organization_admin, :edit_admins, :create_charge, :delete_charge, :admin_view_org_member, :admin_remove_user, :edit_organization_information, :pending_payments, :view_groups]
 
   def new
     @organization = Organization.new
@@ -318,8 +318,8 @@ class OrganizationsController < ApplicationController
     end
     
     def check_admin!
-      if current_user.is_admin_for_org?(params[:id]) == true
-        flash[:notice] = current_user.is_admin_for_org?(params[:id])
+      if current_user.is_admin_for_org?(params[:id]) == [true]
+        # Let them through
       else
         redirect_to root_path, notice:"You don't have permissions to view this"
       end

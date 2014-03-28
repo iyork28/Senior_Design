@@ -127,4 +127,8 @@ class User < ActiveRecord::Base
   def is_admin_for_org? (org_id)
     Membership.where(user_id: self.id, organization_id: org_id).pluck(:admin)
   end
+  
+  def is_member_of_group? (group_id)
+    GroupMembership.where(user_id: self.id, group_id: group_id).exists?
+  end
 end
