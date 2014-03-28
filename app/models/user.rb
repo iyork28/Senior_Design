@@ -123,4 +123,8 @@ class User < ActiveRecord::Base
     @group_charges = group.charges.sum('amount')
     return @group_charges
   end
+  
+  def is_admin_for_org? (org_id)
+    Membership.where(user_id: self.id, organization_id: org_id).pluck(:admin)
+  end
 end
