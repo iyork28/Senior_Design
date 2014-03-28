@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :check_admin!
 
   def index
     @org = Organization.find(params[:org_id])
@@ -50,5 +51,15 @@ class GroupsController < ApplicationController
     group.destroy
     flash[:success] = "Deleted Group #{group.name}"
     redirect_to controller: 'organizations', action: 'view_groups', id: group.organization_id
+  end
+  
+  private
+  
+  def check_admin!
+    if current_user.is_admin_for_org?(params[:org_id]) == [true]
+      flash[:notice] = current_user.is_admin_for_org?(params[:id])
+    else
+      redirect_to root_path, notice:"You don't have permissions to view this"
+    end
   end
 end
