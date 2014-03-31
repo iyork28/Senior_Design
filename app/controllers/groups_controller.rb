@@ -56,8 +56,8 @@ class GroupsController < ApplicationController
   private
   
   def check_admin!
-    if current_user.is_admin_for_org?(params[:org_id]) == [true]
-      flash[:notice] = current_user.is_admin_for_org?(params[:id])
+    if (current_user.is_admin_for_org? Group.find(params[:id]).organization_id) == [true]
+      # Do nothing. Allow access
     else
       redirect_to root_path, notice:"You don't have permissions to view this"
     end
