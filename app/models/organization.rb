@@ -36,6 +36,10 @@ class Organization < ActiveRecord::Base
   
   def get_membership_timestamp_for_user(user)
     @membership = Membership.where(user_id: user.id, organization_id: self.id).first
-    return @membership.read_attribute(:timestamp)
+    datetime = @membership.read_attribute(:timestamp)
+    if datetime.nil?
+      datetime = DateTime.new
+    end
+    return datetime
   end
 end
