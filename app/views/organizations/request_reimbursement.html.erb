@@ -1,0 +1,29 @@
+<h1>Request Reimbursement | <%= @organization.name %></h1>
+<form method="POST" action="<%= url_for :controller => :organizations, :action => :request_reimbursement %>" id="reimbursement_form">
+    <div class="form-group">
+        <label for="amount">Amount:</label><br />
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" class="form-control" name="amount">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label><br />
+        <textarea class="form-control" name="description"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+
+<% content_for :inline_js do %>
+<script>
+$("#reimbursement_form").submit(function(event) {
+    if ($("input[name='amount']").val() < 0) {
+        alert('Reimbursement amount must be positive (it will be applied as a credit)');
+        event.preventDefault();
+    }
+});
+</script>
+<% end %>

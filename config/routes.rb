@@ -11,6 +11,7 @@ SeniorDesign::Application.routes.draw do
   match "organizations/join"                          => "organizations#join", :via => [:get, :post]
   match "organizations/:id/edit_admins"               => "organizations#edit_admins", :via => [:get, :post]
   match "organizations/:id/organization_admin"        => "organizations#organization_admin", :via => :get
+  match "organizations/:id/request_reimbursement"      => "organizations#request_reimbursement", :via => [:get, :post]
   match "organizations/:id/create_charge"             => "organizations#create_charge", :via => [:get, :post]
   match "organizations/:id/view_charges"              => "organizations#view_charges", :via => [:get, :post]
   match "organizations/:id/edit_charge"               => "organizations#edit_charge", :via => [:get, :post]

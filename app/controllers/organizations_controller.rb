@@ -78,6 +78,38 @@ class OrganizationsController < ApplicationController
     @users = User.where(id: @userids)
   end
 
+  def request_reimbursement
+    @organization = Organization.find(params[:id])
+    
+    if request.post?
+      @type = "reimbursement"
+      @amount_in_cents = (params[:amount].to_f * 100).to_i
+      @amount =  @amount_in_cents / 100.0
+      @description = params[:description]
+
+      @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: @organization.id, payment_type: @type, description: @description)
+
+      @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+      if @membership.exists?
+        @payment.confirmed = true # admins are auto approved too
+      end
+
+      if @payment.save
+        @organization.admins.each do |admin|
+          # begin
+          #   AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          # rescue Exception => e
+          #   flash[:error] = e.message
+          # end
+          # need to add emailing for reimbursement requests
+        end
+        redirect_to dashboard_path
+      else
+        flash[:error] = "Reimbursement Creation Failed"
+      end
+    end
+  end
+
   def create_charge
     @organization = Organization.find(params[:id])
     @users = @organization.users.order(:last_name)
