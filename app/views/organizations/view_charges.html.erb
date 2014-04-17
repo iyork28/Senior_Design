@@ -1,0 +1,29 @@
+<h1><%= @organization.name %> | View Charges</h1>
+<%= link_to "Return to Admin Controls", { controller: 'organizations', action: 'organization_admin' } %>
+<br>
+<table class="table table-striped">
+<tr>
+  <th>DESCRIPTION</th>
+  <th>AMOUNT</th> 
+  <th>APPLIED TO</th>
+  <th>DUE DATE</th>
+  <th>OPTIONS</th>
+</tr>
+<% @charges.each do |charge| %>
+<tr>
+	<td><%= charge.description %></td>
+	<td>$<%= "%.2f" % charge.amount %></td>
+	<% if charge.chargeable_type == 'Group' %>
+		<td><%= Group.find(charge.chargeable_id).name %>  <font color="grey">(Group)</font> </td>
+	<% elsif charge.chargeable_type == 'User' %>
+		<td><%= User.find(charge.chargeable_id).full_name %>  <font color="grey">(User)</font> </td>
+	<% elsif charge.chargeable_type == 'Organization' %>
+		<td><%= Organization.find(charge.chargeable_id).name %>  <font color="grey">(Organization)</font> </td>
+	<% end %>
+	<td><%= charge.due_date.strftime('%d %b %Y') %></td>
+	<td><%= link_to 'Edit', 		  {:controller => 'organizations', :action => 'edit_charge', :id => @organization.id ,:charge_id => charge.id }%> / 
+		<%= link_to 'Delete', 		  {:controller => 'organizations', :action => 'delete_charge', :id => @organization.id ,:charge_id => charge.id }%></td>
+		
+</tr>
+<% end %>
+</table>

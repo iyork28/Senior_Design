@@ -1,4 +1,6 @@
 <h1><%= @org.name %> | Membership</h1>
+<%= link_to "Return to Admin Controls", { controller: 'organizations', action: 'organization_admin' } %>
+<br>
 <br>
 <!-- <table border="1"> -->
 <table class="table table-striped">
@@ -7,6 +9,7 @@
 		<th>EMAIL</th>
 		<th>ASSOCIATED GROUPS</th>
 		<th>BALANCE</th>
+		<th>ACTION</th>
 	</tr>
 	<% @members.each do |member| %>
 	<tr>
@@ -21,6 +24,7 @@
 		 	<% end %>
 		 </td>
 		<td> $<%= "%.2f" % member.get_balance_for_organization(@org)%> </td>
+		<td><%= link_to "Remove from organization", {controller: 'organizations', action: 'admin_remove_user', mid: "#{member.id}"} %></td>
 	</tr>
 	<% end %>
 </table>

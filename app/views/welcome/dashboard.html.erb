@@ -1,5 +1,6 @@
 <h1>Dashboard | <%= current_user.full_name %></h1>
 <h2>Total Balance: <%= number_to_currency @current_user.get_total_balance %></h2>
+
 <hr />
 <% if @organizations.blank? %>
     <p>You are not a member of any groups</p>
@@ -10,6 +11,8 @@
         <p>Balance: <%= number_to_currency @current_user.get_balance_for_organization o %></p>
 				<%= link_to 'Make Payment', 			{controller: 'organizations', action: 'create_payment', id: o.id} %><br/>
         <%= link_to 'Create/Edit Payment Plan', {controller: 'organizations', action: 'create_or_edit_payment_plan', id: o.id, userid: @current_user} %><br/>
+		<%= link_to 'Make Payment', 			{controller: 'organizations', action: 'create_payment', id: o.id} %> | 
+        <%= link_to 'Request Reimbursement',    {controller: 'organizations', action: 'request_reimbursement', id: o.id} %><br />
         <% if o.is_admin(@current_user) %>
             <%= link_to 'Admin Controls',        {:controller => 'organizations', :action => 'organization_admin', :id => o.id} %> 
         <% end %>
@@ -17,4 +20,10 @@
     <% end %>
 <% end %>
 <%= link_to 'Join an organization', :controller => 'organizations', :action => 'join' %>
+<br>
 <%= link_to 'Create new organization', new_organization_path %>
+<br>
+<%= link_to "Edit Account Information", edit_user_registration_path %>
+<br>
+
+

@@ -4,7 +4,7 @@
 			<%= link_to "welcome", root_path, id: "logo" %>
 			<nav class="navbar-text navbar-right">
 				<ul class="list-inline">
-                    <% if @current_user %>
+                    <% if current_user %>
                         <li><%= link_to "Dashboard", dashboard_path %></li>
 		                <li><%= link_to 'Sign Out', destroy_user_session_path, :method => :delete %></li>
 					<% else %>

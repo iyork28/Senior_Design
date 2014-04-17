@@ -1,0 +1,43 @@
+<form method="POST" action="<%= url_for :controller => :organizations, :action => :delete_charge %>">
+	<h3>Are you sure you want to delete this charge?</h3>
+	<br>
+	<table class="table table-striped">
+	<tr>
+	  <th>DESCRIPTION</th>
+	  <th>AMOUNT</th> 
+	  <th>APPLIED TO</th>
+	  <th>DUE DATE</th>
+	</tr>
+	<tr>
+		<td><%= @charge.description %></td>
+		<td>$<%= "%.2f" % @charge.amount %></td>
+		<% if @charge.chargeable_type == 'Group' %>
+			<td><%= Group.find(@charge.chargeable_id).name %>  <font color="grey">(Group)</font> </td>
+		<% elsif @charge.chargeable_type == 'User' %>
+			<td><%= User.find(@charge.chargeable_id).full_name %>  <font color="grey">(User)</font> </td>
+		<% elsif @charge.chargeable_type == 'Organization' %>
+			<td><%= Organization.find(@charge.chargeable_id).name %>  <font color="grey">(Organization)</font> </td>
+		<% end %>
+		<td><%= @charge.due_date.strftime('%d %b %Y') %></td>
+	</tr>
+	</table>
+	<br>
+			
+	<div class="form-group">
+	    <input type="submit" id="submit_button" class="btn btn-primary" value="Yes">
+	    <input type="submit" id="cancel_button" class="btn btn-primary" value="No">
+	    <input type="hidden" id="charge_id" name="charge_id" value="<%= @charge.id %>"> 
+        <input type="hidden" id="id" name="id" value="<%= @organization.id %>">
+        <input type="hidden" id="validate_delete" name="validate_delete" value="false">
+		
+	</div>
+	<%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+
+<% content_for :inline_js do %>
+<script>
+$('#submit_button').click(function() {
+    $("#validate_delete").val("true");
+});
+</script>
+<% end %>

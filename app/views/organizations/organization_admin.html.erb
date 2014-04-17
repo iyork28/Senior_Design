@@ -1,9 +1,11 @@
 <h1><%= @organization.name%> Admin Dashboard | <%= current_user.full_name %></h1>
 <hr />
  <h5>Admin Controls:</h5>
-<%= link_to "View Pending Payments (#{@organization.payments.where(confirmed:false).count.to_s})", {:controller => 'organizations', :action => 'pending_payments', :id => @organization.id} %> <br />
+<%= link_to "View Pending Payments & Reimbursements (#{@organization.payments.where(confirmed:false).count.to_s})", {:controller => 'organizations', :action => 'pending_payments', :id => @organization.id} %> <br />
 <%= link_to 'Create Charge',      {:controller => 'organizations', :action => 'create_charge', :id => @organization.id} %> |
+<%= link_to 'View Charges', 		  {:controller => 'organizations', :action => 'view_charges', :id => @organization.id }%> |
 <%= link_to 'Edit Admins',          {:controller => 'organizations', :action => 'edit_admins', :id => @organization.id} %> <br/>
 <%= link_to 'Create New Group', {controller: 'organizations', action: 'create_group', id: @organization.id } %> | 
 <%= link_to 'View Groups',          {controller: 'organizations', action: 'view_groups', id: @organization.id} %> <br/>
+<%= link_to 'Edit Organization Information',          {controller: 'organizations', action: 'edit_organization_information', id: @organization.id} %> <br/>
 <%= link_to 'View Organization Members',            {controller: 'organizations', action: 'view_organization_members', id: @organization.id} %>

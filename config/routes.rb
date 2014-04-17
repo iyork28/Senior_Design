@@ -1,22 +1,31 @@
 SeniorDesign::Application.routes.draw do
   
+  get "users/edit_account_information"
   match "groups/:id/show"                             => "groups#show", :via => :get
   match "organizations/:id/view_groups"               => "organizations#view_groups", :via => :get
   match "organizations/:id/create_group"              => "organizations#create_group", :via => [:get, :post]
-  match "organizations/:id/view_organization_charges" => "organizations#view_organization_charges", :via => [:get, :post]
+  match "organizations/:id/view_organization_charges" => "organizations#view_organization_charges", :via => :get
   match "organizations/:id/view_organization_members" => "organizations#view_organization_members", :via => [:get, :post]
   match "organizations/:id/admin_view_org_member"     => "organizations#admin_view_org_member", :via => [:get, :post]
+  match "organizations/:id/admin_remove_user"         => "organizations#admin_remove_user", :via => :get
   match "organizations/join"                          => "organizations#join", :via => [:get, :post]
   match "organizations/:id/edit_admins"               => "organizations#edit_admins", :via => [:get, :post]
   match "organizations/:id/organization_admin"        => "organizations#organization_admin", :via => :get
+  match "organizations/:id/request_reimbursement"      => "organizations#request_reimbursement", :via => [:get, :post]
   match "organizations/:id/create_charge"             => "organizations#create_charge", :via => [:get, :post]
+  match "organizations/:id/view_charges"              => "organizations#view_charges", :via => [:get, :post]
+  match "organizations/:id/edit_charge"               => "organizations#edit_charge", :via => [:get, :post]
+  match "organizations/:id/delete_charge"             => "organizations#delete_charge", :via => [:get, :post]
   match "organizations/:id/make_payment"              => "organizations#create_payment", :via => [:get, :post]
   match "organizations/:id/pending_payments"          => "organizations#pending_payments", :via => [:get, :post]
   match "organizations/:id/create_or_edit_payment_plan" => "organizations#create_or_edit_payment_plan", :via => [:get, :post]
+  match "organizations/:id/edit_organization_information" => "organizations#edit_organization_information", :via => [:get, :post]
   match "groups/:id/edit"                             => "groups#edit", :via => [:get, :post]
   match "groups/:id/delete"                           => "groups#delete", :via => [:get]
   match "groups/:id/destroy"                          => "groups#destroy", :via => [:post]
   resources :organizations
+  
+  resources :charge
   
   root 'welcome#index'
   

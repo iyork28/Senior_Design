@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140306052125) do
+ActiveRecord::Schema.define(version: 20140415165624) do
 
   create_table "charge_modifications", force: true do |t|
     t.integer  "charge_id"
@@ -48,8 +48,9 @@ ActiveRecord::Schema.define(version: 20140306052125) do
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true
 
   create_table "groups_users", force: true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
+    t.integer  "group_id"
+    t.integer  "user_id"
+    t.datetime "timestamp"
   end
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id"
@@ -62,9 +63,10 @@ ActiveRecord::Schema.define(version: 20140306052125) do
   end
 
   create_table "organizations_users", force: true do |t|
-    t.integer "user_id"
-    t.integer "organization_id"
-    t.boolean "admin",           default: false
+    t.integer  "user_id"
+    t.integer  "organization_id"
+    t.boolean  "admin",           default: false
+    t.datetime "timestamp"
   end
 
   add_index "organizations_users", ["user_id", "organization_id"], name: "index_organizations_users_on_user_id_and_organization_id"
@@ -89,6 +91,7 @@ ActiveRecord::Schema.define(version: 20140306052125) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "payment_type",    default: "cash"
+    t.text     "description"
   end
 
   create_table "users", force: true do |t|

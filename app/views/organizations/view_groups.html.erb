@@ -5,6 +5,7 @@
 <table class="table table-striped">
 	<th>Group Name</th>
 	<th>Actions</th>
+	<th>Outstanding Group Balance</th>
 
 	<% @groups.each do |group| %>
 	<tr>
@@ -13,6 +14,7 @@
 			<%= link_to("Edit Group", {controller: 'groups', action: 'edit', id: group.id}) %> | 
 			<%= link_to("Delete Group", {controller: 'groups', action: 'delete', id: group.id}) %>
 		</td>
+		<td>$<%= "%.2f" % group.get_outstanding_balance %></td>
 	</tr>
 	<% end %>
 </table>

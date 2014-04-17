@@ -1,5 +1,6 @@
 class OrganizationsController < ApplicationController
   before_filter :authenticate_user!
+  before_action :check_admin!, only: [:organization_admin, :edit_admins, :create_charge, :delete_charge, :admin_view_org_member, :admin_remove_user, :edit_organization_information, :pending_payments, :view_groups]
 
   def new
     @organization = Organization.new
@@ -77,6 +78,38 @@ class OrganizationsController < ApplicationController
     @users = User.where(id: @userids)
   end
 
+  def request_reimbursement
+    @organization = Organization.find(params[:id])
+    
+    if request.post?
+      @type = "reimbursement"
+      @amount_in_cents = (params[:amount].to_f * 100).to_i
+      @amount =  @amount_in_cents / 100.0
+      @description = params[:description]
+
+      @payment = Payment.new(amount: @amount, user_id: current_user.id, organization_id: @organization.id, payment_type: @type, description: @description)
+
+      @membership = Membership.where(user: current_user, organization: @organization, admin: true)
+      if @membership.exists?
+        @payment.confirmed = true # admins are auto approved too
+      end
+
+      if @payment.save
+        @organization.admins.each do |admin|
+          # begin
+          #   AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          # rescue Exception => e
+          #   flash[:error] = e.message
+          # end
+          # need to add emailing for reimbursement requests
+        end
+        redirect_to dashboard_path
+      else
+        flash[:error] = "Reimbursement Creation Failed"
+      end
+    end
+  end
+
   def create_charge
     @organization = Organization.find(params[:id])
     @users = @organization.users.order(:last_name)
@@ -98,11 +131,58 @@ class OrganizationsController < ApplicationController
       @due_date = Chronic.parse(params[:due_date])
 
       if @chargeable != nil then
-        @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization)
+        @charge = @chargeable.charges.build(amount: @amount, description: @description, due_date: @due_date, organization: @organization, chargeable: @chargeable)
         @charge.save
         redirect_to dashboard_url
       end
     end
+  end
+
+  def edit_charge
+    @charge = Charge.find(params[:charge_id])
+    @organization = Organization.find(params[:id])
+    @users = @organization.users.order(:last_name)
+    @groups = @organization.groups.order(:name)
+    if request.post?
+      @chargeable = nil
+      @charge_to = params[:charge_to]
+
+      case @charge_to
+        when 'User'
+          @chargeable = User.find(params[:user])
+        when 'Group'
+          @chargeable = Group.find(params[:group])
+        when 'Organization'
+          @chargeable = @organization
+      end
+      @charge.amount = params[:amount]
+      @charge.description = params[:description]
+      @charge.due_date = Chronic.parse(params[:due_date])
+      @charge.chargeable_id = @chargeable.id
+      @charge.chargeable_type = @charge_to
+     
+      @charge.save
+      redirect_to controller: 'organizations', action: 'view_charges'
+   
+    end
+  end
+  
+  def delete_charge
+    @charge = Charge.find(params[:charge_id])
+    @organization = Organization.find(params[:id])
+    if request.post?
+      @validate_delete = params[:validate_delete] == "true"
+      if (@validate_delete)
+         @charge.destroy
+      end
+      redirect_to controller: 'organizations', action: 'view_charges'
+   
+    end
+  end
+
+  def view_charges
+    @organization = Organization.find(params[:id])
+    @charges = Charge.where(organization_id: @organization.id)
   end
   
   def create_group
@@ -150,6 +230,24 @@ class OrganizationsController < ApplicationController
     @payments = @member.get_all_payments_for_user_from_organization(@org).sort_by(&:created_at)
     @payments_total = @payments.sum(&:amount)
   end
+
+  def admin_remove_user
+    member = User.find(params[:mid])
+    org = Organization.find(params[:id])
+    if member != current_user
+      admin_membership = Membership.where(user: current_user, organization: org, admin: true)
+      if admin_membership.exists?
+        membership = Membership.find_by(user: member, organization: org)
+        if membership
+          membership.delete
+          flash[:success] = "Member Removed"
+        end
+      end
+    else
+      flash[:error] = "You can't remove yourself"
+    end
+    redirect_to :controller => 'organizations', :action => 'view_organization_members', :id => org.id
+  end
   
   def create_payment
     @organization = Organization.find(params[:id])
@@ -195,12 +293,32 @@ class OrganizationsController < ApplicationController
 
       if not @payment_failed and @payment.save
         @organization.admins.each do |admin|
-          AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          begin
+            AdminMailer.cash_payment_confirmation_email(admin, current_user).deliver
+          rescue Exception => e
+            flash[:error] = e.message
+          end
         end
         redirect_to dashboard_path
       else
         flash[:error] = "Payment Creation Failed"
       end
+    end
+  end
+
+  def edit_organization_information
+    @organization = Organization.find(params[:id])
+    if request.post?
+      @validate_submit = params[:validate_submit] == "true"
+      if (@validate_submit)
+         @temp_name = params[:name]
+         if (@temp_name != nil && !@temp_name.empty?)
+           @organization.name = @temp_name
+         end
+    
+         @organization.save
+      end
+      redirect_to :controller => 'organizations', :action => 'organization_admin'
     end
   end
 
@@ -252,5 +370,13 @@ class OrganizationsController < ApplicationController
   private
     def organization_params
       params.require(:organization).permit(:name)
+    end
+    
+    def check_admin!
+      if current_user.is_admin_for_org?(params[:id]) == [true]
+        # Let them through
+      else
+        redirect_to root_path, notice:"You don't have permissions to view this"
+      end
     end
 end
