@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140221173156) do
+ActiveRecord::Schema.define(version: 20140306052125) do
+
+  create_table "charge_modifications", force: true do |t|
+    t.integer  "charge_id"
+    t.integer  "user_id"
+    t.float    "amount"
+    t.date     "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "charge_modifications", ["charge_id"], name: "index_charge_modifications_on_charge_id"
+  add_index "charge_modifications", ["user_id"], name: "index_charge_modifications_on_user_id"
 
   create_table "charges", force: true do |t|
     t.string   "description"
@@ -56,6 +68,18 @@ ActiveRecord::Schema.define(version: 20140221173156) do
   end
 
   add_index "organizations_users", ["user_id", "organization_id"], name: "index_organizations_users_on_user_id_and_organization_id"
+
+  create_table "payment_plan_modifications", force: true do |t|
+    t.integer  "charge_id"
+    t.integer  "user_id"
+    t.float    "amount"
+    t.date     "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_plan_modifications", ["charge_id"], name: "index_payment_plan_modifications_on_charge_id"
+  add_index "payment_plan_modifications", ["user_id"], name: "index_payment_plan_modifications_on_user_id"
 
   create_table "payments", force: true do |t|
     t.integer  "user_id"

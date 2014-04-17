@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_memberships
   has_many :charges, as: :chargeable
   has_many :payments
+  has_many :charge_modifications
+  has_many :payment_plan_modifications
   
   def full_name
     [first_name, last_name].join(' ')

@@ -15,3 +15,29 @@
 //= require turbolinks
 //= require bootstrap
 //= require_tree .
+$(function()
+{
+    $(document).on('click', '.btn-add', function(e)
+    {
+        e.preventDefault();
+
+        var controlDiv = document.getElementById("controls"),
+            currentEntry = $(controlDiv).children().last(),
+            newEntry = $(currentEntry).clone();
+            
+        $(newEntry).find("input").val("");
+        $(newEntry).appendTo(controlDiv);
+
+        
+        $(controlDiv).find('.entry:not(:last) .btn-add')
+            .removeClass('btn-add').addClass('btn-remove')
+            .removeClass('btn-success').addClass('btn-danger')
+            .html('<span class="glyphicon glyphicon-minus"></span>');
+    }).on('click', '.btn-remove', function(e)
+    {
+		$(this).parents('.entry:first').remove();
+
+		e.preventDefault();
+		return false;
+	});
+});

@@ -1,0 +1,82 @@
+<%= params.inspect %>
+
+<h1>Create/Edit Payment Plan | <%= @user.full_name %></h1>
+<h3><%= @organization.name %> Total Balance = <%= @balance %></h3>
+<form class="form-inline" role="form" autocomplete="off" method="POST" action="<%= url_for :controller => :organizations, :action => :create_or_edit_payment_plan, :userid => @user, :id => @organization %>">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>Payment Plan Breakdown</h3></div>
+        <div class="panel-body">
+             <% if(@balance>0) %>
+                <p>Break down your Balance into payments due on customized dates. Add or edit dates and ammounts to customize your plan The last date and amount will be the remaining balance</p>
+            <% else %>
+                <p> Your balance is $0 for this organization. You do not require a payment plan for this organization at this time. </p>
+            <% end %>
+            <% if(@balance>0) %>
+                <table class="table">
+                    <colgroup>
+                        <col class="col-xs-2">
+                        <col class="col-xs-6">
+                    </colgroup>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Due Date (yyyy/mm/dd)</th>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="control-group" id="fields">
+                        <div id="controls" class="controls">                        
+                            <% if @payment_plan_amounts.blank? %>
+                                <div class="entry input-group ">
+                                    <div class="form-group">
+                                            <input class="form-control" name="amounts[]" type="text" value="<%=@balance%>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" name="dates[]" type="text" value="<%=@last_charge_date%>">
+                                    </div>
+                                    <div class="form-group">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            <% else %>
+                                <% @payment_plan_amounts.each_with_index do |amount, i| %>
+                                    <div class="entry input-group ">
+                                        <div class="form-group">
+                                            <input class="form-control" name="amounts[]" type="number" required=true value=<%=amount%>>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" name="dates[]" type="date" required=true value=<%=@due_dates[i]%>>
+                                        </div>
+                                        <div class="form-group">
+                                            <span class="input-group-btn">
+                                                <% if i==@payment_plan_amounts.length %>
+                                                    <button class="btn btn-success btn-add" type="button">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                    </button>
+                                                <% else %>
+                                                    <button class="btn btn-danger btn-remove" type="button">
+                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                <% end %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <% end %>
+                            <% end %>                   
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Submit Payment Plan for Approval">
+                </div>
+            <% end %>
+        </div>
+    </div>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+</form>
+<br>
+<p>Press <span class="glyphicon glyphicon-plus gs"></span> to add another date</p><br>

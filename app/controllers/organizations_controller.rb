@@ -224,6 +224,29 @@ class OrganizationsController < ApplicationController
 
     @pending_payments = @organization.payments.where(confirmed: false)
   end
+
+  def create_or_edit_payment_plan
+    if request.post?
+      @amounts = params[:amounts]
+      @dates = params[:dates]
+
+
+    end
+    @organization = Organization.find(params[:id])
+    @user = User.find(params[:userid])
+    @membership = Membership.where(user: current_user, organization: @organization)
+    if not @membership.exists?
+      @membership = Membership.where(user: @user, organization: @organization, admin: true)
+      if not @membership.exists?
+        redirect_to dashboard_path
+      end
+    end
+    @balance = @user.get_balance_for_organization(@organization)
+    if(@balance>0)
+      @charges = @user.get_all_charges_for_user_from_organization(@organization)
+      @last_charge_date = @charges.max_by(&:due_date).due_date
+    end
+  end
   
 
   private

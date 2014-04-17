@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  charge_id: 
+  amount: 1.5
+  due_date: 2014-03-05
+
+two:
+  charge_id: 
+  amount: 1.5
+  due_date: 2014-03-05
