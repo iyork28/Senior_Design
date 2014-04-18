@@ -216,6 +216,32 @@ class OrganizationsController < ApplicationController
     @charges = current_user.get_all_charges_for_user_from_organization(@org).sort_by(&:due_date)
     @payments = current_user.get_all_payments_for_user_from_organization(@org).sort_by(&:created_at)
     @payments_total = @payments.sum(&:amount)
+    @haspaymentplan = false
+    @charges.each do |c|
+      if !c.payment_plan_modifications.where(user: current_user).blank?
+        @haspaymentplan = true
+      end
+    end
+    if @haspaymentplan
+      @due_dates = []
+      @payment_plan_amounts = []
+      currdate = @charges.at(0).payment_plan_modifications.where(user: current_user).at(0).due_date
+      @due_dates.push(currdate)
+      @payment_plan_amounts.push(0)
+      index = 0
+      @charges.each do |c|
+        c.payment_plan_modifications.where(user: current_user).each do |p|
+          if @due_dates.index(p.due_date)!=nil
+            @payment_plan_amounts[@due_dates.index(p.due_date)] = @payment_plan_amounts[@due_dates.index(p.due_date)] + p.amount
+          else
+            index+=1
+            @due_dates.push(p.due_date)
+            @payment_plan_amounts.push(p.amount)
+            currdate = p.due_date
+          end
+        end
+      end
+    end
   end
   
   def view_organization_members
@@ -344,12 +370,6 @@ class OrganizationsController < ApplicationController
   end
 
   def create_or_edit_payment_plan
-    if request.post?
-      @amounts = params[:amounts]
-      @dates = params[:dates]
-
-
-    end
     @organization = Organization.find(params[:id])
     @user = User.find(params[:userid])
     @membership = Membership.where(user: current_user, organization: @organization)
@@ -362,7 +382,71 @@ class OrganizationsController < ApplicationController
     @balance = @user.get_balance_for_organization(@organization)
     if(@balance>0)
       @charges = @user.get_all_charges_for_user_from_organization(@organization)
+      haspaymentplan = false
+      @charges.each do |c|
+        if !c.payment_plan_modifications.where(user: @user).blank?
+          haspaymentplan = true
+        end
+      end
+      if haspaymentplan
+        @due_dates = []
+        @payment_plan_amounts = []
+        currdate = @charges.at(0).payment_plan_modifications.where(user: @user).at(0).due_date
+        @due_dates.push(currdate)
+        @payment_plan_amounts.push(0)
+        index = 0
+        @charges.each do |c|
+          c.payment_plan_modifications.where(user: @user).each do |p|
+            if @due_dates.index(p.due_date)!=nil
+              @payment_plan_amounts[@due_dates.index(p.due_date)] = @payment_plan_amounts[@due_dates.index(p.due_date)] + p.amount
+            else
+              index+=1
+              @due_dates.push(p.due_date)
+              @payment_plan_amounts.push(p.amount)
+              currdate = p.due_date
+            end
+          end
+        end
+      end
       @last_charge_date = @charges.max_by(&:due_date).due_date
+    end
+    if request.post?
+      @amounts = params[:amounts]
+      @dates = params[:dates]
+      @charges = @charges.sort_by(&:due_date)
+      @charges.each do |c|
+        c.payment_plan_modifications.where(user: @user).each do |p|
+          p.destroy
+        end
+      end
+      tempamountleft = 0
+      modamount = 0;
+      chargeindex = 0
+      @amounts.each_with_index do |a,i|
+        temptotal = a.to_f
+        while temptotal>0 do
+          if (tempamountleft==0)                          #If we have not split up a charge 
+            tempcharge = @charges.at(chargeindex)          #pop the earliest charge off the front
+            chargeindex += 1
+            modamount = tempcharge.amount                 #and set the amount for the pp mod to be the amount of this charge
+          else
+            tempcharge = @charges.at(chargeindex-1)
+            modamount = tempamountleft
+          end
+
+          if modamount>=temptotal                         #If this charge is more than what is left for this pp segment
+            tempamountleft = modamount-temptotal          #set the amount left in this charge to what is left after this segment
+            modamount = temptotal                         #and set the amount for the pp mod to the rest of this segment
+            temptotal = 0                                 #since this finishes off the pp mod set the total to zero
+          else                  
+            tempamountleft = 0                            #otherwise we use the whole charge so no amount left
+            temptotal -= modamount                        #and the temp total is reduced by this amount
+          end
+          @pmod = PaymentPlanModification.new(amount: modamount, user_id: @user.id, charge_id: tempcharge.id, due_date: @dates[i]);
+          @pmod.save
+        end
+      end
+      redirect_to dashboard_path
     end
   end
   

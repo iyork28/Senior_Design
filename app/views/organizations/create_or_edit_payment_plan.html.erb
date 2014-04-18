@@ -1,5 +1,3 @@
-<%= params.inspect %>
-
 <h1>Create/Edit Payment Plan | <%= @user.full_name %></h1>
 <h3><%= @organization.name %> Total Balance = <%= @balance %></h3>
 <form class="form-inline" role="form" autocomplete="off" method="POST" action="<%= url_for :controller => :organizations, :action => :create_or_edit_payment_plan, :userid => @user, :id => @organization %>">
@@ -19,7 +17,7 @@
                     </colgroup>
                     <tr>
                         <th>Amount</th>
-                        <th>Due Date (yyyy/mm/dd)</th>
+                        <th>Due Date (yyyy-mm-dd)</th>
                     </tr>
                 </table>
                 <div class="row">
@@ -52,7 +50,7 @@
                                         </div>
                                         <div class="form-group">
                                             <span class="input-group-btn">
-                                                <% if i==@payment_plan_amounts.length %>
+                                                <% if i==@payment_plan_amounts.length-1 %>
                                                     <button class="btn btn-success btn-add" type="button">
                                                         <span class="glyphicon glyphicon-plus"></span>
                                                     </button>
@@ -79,4 +77,6 @@
     <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 </form>
 <br>
-<p>Press <span class="glyphicon glyphicon-plus gs"></span> to add another date</p><br>
+<% if @balance > 0 %> 
+    <p>Press <span class="glyphicon glyphicon-plus gs"></span> to add another date</p><br>
+<% end %>
