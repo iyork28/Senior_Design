@@ -193,14 +193,16 @@ class OrganizationsController < ApplicationController
       group = Group.new
       group.name = params[:name]
       group.organization = Organization.find(params[:id])
-      if group.save
-        User.find(params[:added_users]).each do |user|
-          GroupMembership.create(group_id: group.id, user_id: user.id)
+      if params.has_key? :added_users
+        if group.save
+          User.find(params[:added_users]).each do |user|
+            GroupMembership.create(group_id: group.id, user_id: user.id)
+          end
+          flash[:success] = "Group Created"
+          redirect_to dashboard_path
+        else
+          flash[:error] = "Group Creation Failed"
         end
-        flash[:success] = "Group Created"
-        redirect_to dashboard_path
-      else
-        flash[:fail] = "Group Creation Failed"
       end
     end
   end

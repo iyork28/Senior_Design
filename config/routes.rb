@@ -1,6 +1,5 @@
 SeniorDesign::Application.routes.draw do
   
-  get "users/edit_account_information"
   match "groups/:id/show"                             => "groups#show", :via => :get
   match "organizations/:id/view_groups"               => "organizations#view_groups", :via => :get
   match "organizations/:id/create_group"              => "organizations#create_group", :via => [:get, :post]
