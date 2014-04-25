@@ -1,7 +1,49 @@
 <h1><%= @org.name %> | <%= current_user.full_name %></h1>
 <h3>Total Balance: <%= number_to_currency current_user.get_balance_for_organization @org %></h3>
 <br>
-<% if @haspaymentplan %>
+
+<h4>Unpaid Charges</h4>
+<table class="table table-striped">
+<tr>
+  <th>DESCRIPTION</th>
+  <th>AMOUNT</th> 
+  <th>DUE DATE(S)</th>
+</tr>
+<% @temp_val = @payments_total %>
+<% @unpaid_charges_with_payment_plan = [] %>
+<% @charges.each do |charge| %>
+	<% if @temp_val >= charge.amount %>
+		<% @temp_val -= charge.amount %>
+	<% elsif @temp_val > 0 %>
+		<tr>
+			<td><%= charge.description  %> </td>
+			<td>$<%= "%.2f" % charge.amount %><br /><font color="red">(Partial Payment! Still Owe: $<%= "%.2f" % (charge.amount - @temp_val) %>)</font> </td>
+			<% if !charge.payment_plan_modifications.empty? %>
+                <% @unpaid_charges_with_payment_plan.append(charge) %>
+                <td><% charge.payment_plan_modifications.each_with_index do |m, i| %><%= m.due_date.strftime('%d %b %Y') %><% if i < charge.payment_plan_modifications.length - 1 %><br /><% end %><% end %><br /><span class="text-muted">(see below for actual amounts and dates)</span></td>
+            <% else %>
+                <td><%= charge.due_date.strftime('%d %b %Y') %></td>
+            <% end %>
+
+		</tr>
+		<% @temp_val = 0 %>
+	<% else %>
+		<tr>
+			<td><%= charge.description  %> </td>
+			<td>$<%= "%.2f" % charge.amount %> </td>
+            <% if !charge.payment_plan_modifications.empty? %>
+                <% @unpaid_charges_with_payment_plan.append(charge) %>
+                <td><% charge.payment_plan_modifications.each_with_index do |m, i| %><%= m.due_date.strftime('%d %b %Y') %><% if i < charge.payment_plan_modifications.length - 1 %><br /><% end %><% end %><br /><span class="text-muted">(see below for actual amounts and dates)</span></td>
+            <% else %>
+                <td><%= charge.due_date.strftime('%d %b %Y') %></td>
+            <% end %>
+		</tr>
+	<% end %>
+<% end %>
+</table>
+<br>
+
+<% if @haspaymentplan and !@unpaid_charges_with_payment_plan.empty?  %>
 <h4>Payment Plan Breakdown</h4>
 <table class="table table-striped">
 <tr>
@@ -10,51 +52,17 @@
 </tr>
 
 <% @payment_plan_amounts.each_with_index do |amount, i| %>
+<% if !(@unpaid_charges_with_payment_plan & @payment_plan_charges[i]).empty? %>
 <tr>
   <td>$<%= "%.2f" % amount %></td>
   <td><%= @due_dates[i].strftime('%d %b %Y')  %> </td>
-<% end %>
-</table>
-<br>
-<% end %>
-
-<h4>Unpaid Charges</h4>
-<table class="table table-striped">
-<tr>
-  <th>DESCRIPTION</th>
-  <th>AMOUNT</th> 
-  <th>DUE DATE</th>
 </tr>
-<% @temp_val = @payments_total %>
-<% @charges.each do |charge| %>
-	<% if @temp_val >= charge.amount %>
-		<% @temp_val -= charge.amount %>
-	<% elsif @temp_val > 0 %>
-		<tr>
-			<td><%= charge.description  %> </td>
-			<td>$<%= "%.2f" % charge.amount %> <font color="red">(Partial Payment! Still Owe: $<%= "%.2f" % (charge.amount - @temp_val) %>)</font> </td>
-			<% if !@haspaymentplan %>
-				<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
-			<% else %>
-				<td>N/A<td>
-			<% end %>
-
-		</tr>
-		<% @temp_val = 0 %>
-	<% else %>
-		<tr>
-			<td><%= charge.description  %> </td>
-			<td>$<%= "%.2f" % charge.amount %> </td>
-			<% if !@haspaymentplan %>
-				<td><%= charge.due_date.strftime('%d %b %Y') %> </td>
-			<% else %>
-				<td>N/A<td>
-			<% end %>
-		</tr>
-	<% end %>
+<% end %>
 <% end %>
 </table>
 <br>
+<% end %>
+
 <h4>Payments</h4>
 <table class="table table-striped">
 <tr>

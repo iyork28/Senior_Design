@@ -227,18 +227,22 @@ class OrganizationsController < ApplicationController
     if @haspaymentplan
       @due_dates = []
       @payment_plan_amounts = []
+      @payment_plan_charges = []
       currdate = @charges.at(0).payment_plan_modifications.where(user: current_user).at(0).due_date
       @due_dates.push(currdate)
       @payment_plan_amounts.push(0)
+      @payment_plan_charges.push([@charges.at(0)])
       index = 0
       @charges.each do |c|
         c.payment_plan_modifications.where(user: current_user).each do |p|
           if @due_dates.index(p.due_date)!=nil
             @payment_plan_amounts[@due_dates.index(p.due_date)] = @payment_plan_amounts[@due_dates.index(p.due_date)] + p.amount
+            @payment_plan_charges[@due_dates.index(p.due_date)].append(c)
           else
             index+=1
             @due_dates.push(p.due_date)
             @payment_plan_amounts.push(p.amount)
+            @payment_plan_charges.append([c])
             currdate = p.due_date
           end
         end
