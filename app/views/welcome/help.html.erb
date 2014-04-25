@@ -1,0 +1,25 @@
+<h1>Help</h1>
+
+<h3>Creating an Organization</h3>
+
+<p>Creating an organization with FIRES is very easy. Simply log in or create an account and click <%= link_to 'Create new organization', new_organization_path %>.</p>
+
+<p>You will be prompted to give your organization a name and a passcode. You can allow people to join your organization by sharing the passcode with them.</p>
+
+<h3>Joining an Organization</h3>
+<p>You can join an organization by clicking on <%= link_to "Join an organization", :controller => 'organizations', :action => 'join' %>. Enter the organization's passcode to join.</p>
+
+<h3>Creating a Charge</h3>
+
+<p>As an admin in an organization you are in charge of creating charges for your organization. With FIRES design, it is easy to create charges for any organization for which you are an admin. To create a charge click on admin controls for the organization in mind. Then click on create charge.</p>
+
+<p>A charge can be assigned to an entire "Organization", a "Group" of users in an organization, or a single "User". If you select Group or User, a dropdown menu will appear where you must select what Group or User you wish to charge. Then enter an amount, a description, and a due date and click submit.</p>
+
+<h3>Creating a Group</h3>
+
+<p>Groups of users can be used to quickly and easily charge more than one user. To create a group, click on the Create New Group link in the admin controls menu. From here, you can name the group and select the users that will be in the group. Click submit to create.</p>
+
+<h3>Adding or Removing Admins</h3>
+
+<p>Organization admins can also add add remove admins for their respective organizations. Click on the Edit Admins link in the Admin Controls menu to access. Select the users you wish to give or remove admin privileges to and click submit.</p>
+

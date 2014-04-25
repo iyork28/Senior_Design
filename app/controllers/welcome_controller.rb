@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   before_filter :authenticate_user!,
-                :except => [:index]
+                :except => [:index, :help]
 
   def index
     if user_signed_in?
@@ -10,6 +10,10 @@ class WelcomeController < ApplicationController
 
   def dashboard
     @organizations = current_user.organizations.order(:name)
+  end
+  
+  def help
+    
   end
 
 end

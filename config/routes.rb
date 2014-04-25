@@ -1,5 +1,6 @@
 SeniorDesign::Application.routes.draw do
   
+  match "help" => "welcome#help", via: :get
   match "groups/:id/show"                             => "groups#show", :via => :get
   match "organizations/:id/view_groups"               => "organizations#view_groups", :via => :get
   match "organizations/:id/create_group"              => "organizations#create_group", :via => [:get, :post]
